@@ -3,7 +3,8 @@ import "../../index.css";
 import { getQuestionsById } from "../../helpers/questions";
 import QuestionForm from "../../components/ui/forms/QuestionForm";
 import { useEffect, useState } from "react";
-import { Question } from "../../Types";
+import { Question, Survey } from "../../Types";
+import { getSurveyById } from "../../helpers/surveys";
 import { Database } from "../../Types/supabase";
 import { useRecoilState } from "recoil";
 import { surveyState } from "../../recoil/recoil";
@@ -12,7 +13,10 @@ const QuestionPage = () => {
   const [questions, setQuestions] =
     useState<Database["public"]["Tables"]["questions"]["Row"][]>();
   const currentUrl = window.location.pathname.split("/")[3];
+  const pathname = window.location.pathname;
+  const surveyId = pathname?.split("/")[3];
   const [survey, setSurvey] = useRecoilState(surveyState);
+  const [surveyInfo, setSurveyInfo] = useState<Survey>();
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -41,9 +45,22 @@ const QuestionPage = () => {
       fetchData();
     }
   }, [currentUrl]);
+
+  useEffect(() => {
+    console.log(surveyInfo);
+  }, [surveyInfo])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      getSurveyById(surveyId, setSurveyInfo);
+      //   getResults(uid, surveyId, setResults);
+    };
+    fetchData();
+  }, [surveyId]);
+
   return (
     <div>
-      <Header heading="Workplace survey 1" />
+      <Header heading={`Workplace ${surveyInfo?.title}`} />
       <QuestionForm questions={questions} />
     </div>
   );

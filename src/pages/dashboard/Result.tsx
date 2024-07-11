@@ -35,6 +35,11 @@ const Result = () => {
   }, [surveyId]);
 
   useEffect(() => {
+    console.log(survey);
+  }, [survey])
+
+
+  useEffect(() => {
     const uid = localStorage.getItem("uid")!;
     getDoc(doc(collection(db, "users"), uid)).then((doc) => {
       if (doc.exists()) {
