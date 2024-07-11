@@ -38,9 +38,9 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
       questionId: string;
       sectionname: string;
       points: number;
-      sectionRecOne:string;
-      sectionRecTwo:string;
-      sectionRecThree:string;
+      sectionRecOne: string;
+      sectionRecTwo: string;
+      sectionRecThree: string;
     }>
   >([]);
 
@@ -57,6 +57,11 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
     setAllQuestions(getQuestionsFromSurvey());
   }, [questions, index, surveyId]);
 
+  useEffect(() => {
+    console.log("tempResult:\n", tempResult);
+  }, [tempResult])
+
+
   const handleNext = (e: any) => {
     e.preventDefault();
 
@@ -72,12 +77,33 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
     if (allQuestions.length - 1 !== index) {
       setIndex(nextIndex);
       setCurrentQuestion(allQuestions[nextIndex]);
+      if (tempResult.filter((item: any) => item.questionId == allQuestions[nextIndex].id).length != 0) {
+        let pt: any = tempResult.filter((item: any) => item.questionId == allQuestions[nextIndex].id)[0].points;
+        if (pt == 1) {
+          setColor("a");
+          document.getElementById("radio1").click();
+        }
+        if (pt == 0.75) {
+          setColor("b");
+          document.getElementById("radio2").click();
+        }
+        if (pt == 0.5) {
+          setColor("c");
+          document.getElementById("radio3").click();
+        }
+        if (pt == 0.25) {
+          setColor("d");
+          document.getElementById("radio4").click();
+        }
+      }
     } else {
       setIsOpen(true);
       setProgress(100);
     }
 
     const subsectionId = currentQuestion?.subsectionid;
+    console.log("currentQuestion:\n", currentQuestion);
+
     const sectionId = survey?.sections?.find((i) =>
       i.subsections?.find((j) => j.id === subsectionId)
     )?.id;
@@ -94,20 +120,87 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
       i.subsections?.find((j) => j.id === subsectionId)
     )?.from25to50;
     const questionId = currentQuestion?.id;
+    console.log("Points:\n", {
+      points,
+      questionId,
+      sectionId,
+      sectionname,
+      subsectionId,
+      sectionRecOne,
+      sectionRecTwo,
+      sectionRecThree,
+    });
 
-    setTempResult((prev) => [
-      ...prev,
-      {
-        points,
-        questionId,
-        sectionId,
-        sectionname,
-        subsectionId,
-        sectionRecOne,
-        sectionRecTwo,
-        sectionRecThree,
-      } as any,
-    ]);
+    if (tempResult.filter((item: any) => item.questionId == questionId).length == 0) {
+      setTempResult((prev) => [
+        ...prev,
+        {
+          points,
+          questionId,
+          sectionId,
+          sectionname,
+          subsectionId,
+          sectionRecOne,
+          sectionRecTwo,
+          sectionRecThree,
+        } as any,
+      ]);
+    }
+    else {
+      let newArray: any = tempResult.map((item: any) => {
+        if (item.questionId == questionId) {
+          return {
+            points,
+            questionId,
+            sectionId,
+            sectionname,
+            subsectionId,
+            sectionRecOne,
+            sectionRecTwo,
+            sectionRecThree,
+          };
+        }
+        else {
+          return item;
+        }
+      });
+      setTempResult(newArray);
+    }
+  };
+
+  const handlePrevious = (e: any) => {
+    e.preventDefault();
+
+    const nextIndex = index - 1;
+
+    if (nextIndex >= 0) {
+      setIndex(nextIndex);
+      setCurrentQuestion(allQuestions[nextIndex]);
+
+      if (tempResult.filter((item: any) => item.questionId == allQuestions[nextIndex].id).length != 0) {
+        let pt: any = tempResult.filter((item: any) => item.questionId == allQuestions[nextIndex].id)[0].points;
+        if (pt == 1) {
+          setColor("a");
+          document.getElementById("radio1").click();
+        }
+        if (pt == 0.75) {
+          setColor("b");
+          document.getElementById("radio2").click();
+        }
+        if (pt == 0.5) {
+          setColor("c");
+          document.getElementById("radio3").click();
+        }
+        if (pt == 0.25) {
+          setColor("d");
+          document.getElementById("radio4").click();
+        }
+      }
+
+    } else {
+      return;
+    }
+
   };
 
   useEffect(() => {
@@ -188,45 +281,45 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
       scoreBySection: [],
       recommendations: [],
     };
-  
+
     // Function to calculate subsection total score
     const calculateSubsectionTotal = (subsection) => {
       return subsection.responses.reduce((acc, response) => acc + response.points, 0);
     };
-  
+
     // Iterate through results
     uniqueResults.forEach((result) => {
       // Calculate total score for the current section
       const sectionTotalScore = result.subsections.reduce((acc, subsection) => {
         return acc + calculateSubsectionTotal(subsection) / subsection.responses.length;
       }, 0);
-  
+
       // Calculate proportionate points for the section based on the total survey points
       const proportionatePoints = (sectionTotalScore / result.subsections.length) * 100;
-  
+
       // Add section and its proportionate points to the result object
       resultObject.scoreBySection.push({
         section: result.sectionname,
         score: proportionatePoints,
       });
-  
+
       // Determine recommendation based on proportionate points (customize this logic)
       const recommendation =
-      proportionatePoints >= 75
-        ? result.sectionRecOne
-        : proportionatePoints >= 50
-        ? result.sectionRecTwo
-        : result.sectionRecThree;
+        proportionatePoints >= 75
+          ? result.sectionRecOne
+          : proportionatePoints >= 50
+            ? result.sectionRecTwo
+            : result.sectionRecThree;
 
       resultObject.recommendations.push({
         section: result.sectionname,
         recommendation: recommendation,
       });
     });
-  
+
     console.log(resultObject);
     console.log(userId);
-  
+
     try {
       await addDoc(
         collection(db, "users", userId, "completedSurveys"),
@@ -236,17 +329,17 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
       console.log("Error completedSurveys", error.message);
     }
   };
-  
+
   // Example usage:
   // calculateResults(data.results, data.surveyId, "user123");
-  
-  
+
+
   // Example usage:
   // calculateResults(data.results, data.surveyId, "user123");
-  
+
   // Example usage:
   // calculateResults(uniqueResultsArray, "survey123", "user456");
-  
+
   const getQuestionsFromSurvey = () => {
     if (survey.sections) {
       return survey.sections.reduce(
@@ -290,9 +383,8 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
             />
             {currentQuestion?.option1 ? (
               <label
-                className={`flex flex-col p-3 max-w-[40vw] border-2 rounded-lg border-primary ${
-                  color === "a" && "bg-[#f0801037]"
-                } cursor-pointer`}
+                className={`flex flex-col p-3 max-w-[50vw] border-2 rounded-lg border-primary ${color === "a" && "bg-[#f0801037]"
+                  } cursor-pointer`}
                 htmlFor="radio1"
                 onClick={() => setColor("a")}
               >
@@ -304,7 +396,7 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
                 </span>
               </label>
             ) : (
-              <div className="bg-gray-200 max-w-[40vw] h-14 rounded animate-pulse"></div>
+              <div className="bg-gray-200 max-w-[50vw] h-14 rounded animate-pulse"></div>
             )}
           </div>
           <div className="my-2">
@@ -322,9 +414,8 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
             />
             {currentQuestion?.option2 ? (
               <label
-                className={`flex flex-col p-3 max-w-[40vw] border-2 rounded-lg border-primary ${
-                  color === "b" && "bg-[#f0801037]"
-                } cursor-pointer`}
+                className={`flex flex-col p-3 max-w-[50vw] border-2 rounded-lg border-primary ${color === "b" && "bg-[#f0801037]"
+                  } cursor-pointer`}
                 htmlFor="radio2"
                 onClick={() => setColor("b")}
               >
@@ -336,7 +427,7 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
                 </span>
               </label>
             ) : (
-              <div className="bg-gray-200 max-w-[40vw] h-14 rounded animate-pulse"></div>
+              <div className="bg-gray-200 max-w-[50vw] h-14 rounded animate-pulse"></div>
             )}
           </div>
           <div className="my-2">
@@ -354,9 +445,8 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
             />
             {currentQuestion?.option3 ? (
               <label
-                className={`flex flex-col p-3 max-w-[40vw] border-2 rounded-lg border-primary ${
-                  color == "c" && "bg-[#f0801037]"
-                } cursor-pointer`}
+                className={`flex flex-col p-3 max-w-[50vw] border-2 rounded-lg border-primary ${color == "c" && "bg-[#f0801037]"
+                  } cursor-pointer`}
                 htmlFor="radio3"
                 onClick={() => setColor("c")}
               >
@@ -368,7 +458,7 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
                 </span>
               </label>
             ) : (
-              <div className="bg-gray-200 max-w-[40vw] h-14 rounded animate-pulse"></div>
+              <div className="bg-gray-200 max-w-[50vw] h-14 rounded animate-pulse"></div>
             )}
           </div>
           <div className="my-2">
@@ -386,9 +476,8 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
             />
             {currentQuestion?.option4 ? (
               <label
-                className={`flex flex-col p-3 max-w-[40vw] border-2 rounded-lg border-primary ${
-                  color === "d" && "bg-[#f0801037]"
-                } cursor-pointer`}
+                className={`flex flex-col p-3 max-w-[50vw] border-2 rounded-lg border-primary ${color === "d" && "bg-[#f0801037]"
+                  } cursor-pointer`}
                 htmlFor="radio4"
                 onClick={() => setColor("d")}
               >
@@ -400,12 +489,19 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
                 </span>
               </label>
             ) : (
-              <div className="bg-gray-200 max-w-[40vw] h-14 rounded animate-pulse"></div>
+              <div className="bg-gray-200 max-w-[50vw] h-14 rounded animate-pulse"></div>
             )}
           </div>
-          <div>
+          <div className=" my-20 max-w-[50vw] flex flex-row justify-between">
             <Button
-              className="bg-[#3C3C3C] text-lg text-white my-20 w-[182px] h-[49px]"
+              className="bg-[#3C3C3C] text-lg text-white w-[182px] h-[49px]"
+              onClick={handlePrevious}
+              type="submit"
+            >
+              Previous
+            </Button>
+            <Button
+              className="bg-[#3C3C3C] text-lg text-white w-[182px] h-[49px]"
               onClick={handleNext}
               type="submit"
             >
