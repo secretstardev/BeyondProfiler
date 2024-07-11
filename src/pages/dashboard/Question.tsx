@@ -47,10 +47,6 @@ const QuestionPage = () => {
   }, [currentUrl]);
 
   useEffect(() => {
-    console.log(surveyInfo);
-  }, [surveyInfo])
-
-  useEffect(() => {
     const fetchData = async () => {
       getSurveyById(surveyId, setSurveyInfo);
       //   getResults(uid, surveyId, setResults);
@@ -60,7 +56,7 @@ const QuestionPage = () => {
 
   return (
     <div>
-      <Header heading={`Workplace ${surveyInfo?.title}`} />
+      <Header heading={surveyInfo == undefined ? "Workplace" : `Workplace ${surveyInfo?.title}`} />
       <QuestionForm questions={questions} />
     </div>
   );
