@@ -31,7 +31,7 @@ const SurveyCard = ({
   const [numberOfQuestions, setnumberOfQuestions] = useState(0);
   const [completedSurveys, setCompletedSurvey] = useState<string[]>([]);
   const navigate = useNavigate();
-  const {user}=useGetUser();
+  const { user } = useGetUser();
 
   useEffect(() => {
     setIsLoading(true);
@@ -40,7 +40,7 @@ const SurveyCard = ({
     const fetchData = async () => {
       setQuestions(await getQuestionsById(survey?.id));
       getResultsData(uid, survey?.id, setResults);
-     await getCompleteSurveys(uid, setCompletedSurvey);
+      await getCompleteSurveys(uid, setCompletedSurvey);
     };
     fetchData().finally(() => {
       setIsLoading(false);
@@ -81,11 +81,11 @@ const SurveyCard = ({
             <div>
               <Link
                 to={`/dashboard/survey/${survey.id}`}
-                className="text-2xl font-normal cursor-pointer uppercase"
+                className="text-2xl font-normal cursor-pointer uppercase line-clamp-2"
               >
                 {survey?.title}
               </Link>
-              <p className="text-sm my-3 normal-case font-normal">
+              <p className="text-sm my-3 normal-case font-normal line-clamp-3 min-h-[60px]">
                 {survey?.description}
               </p>
               {role == "admin" ? (
@@ -101,34 +101,32 @@ const SurveyCard = ({
                   {numberOfQuestions} questions
                 </p>
               )}
-              
+
             </div>
             <div className="flex justify-end mb-3">
               {completedSurveys && completedSurveys.includes(survey?.id) ? (
                 <Button
-                  className={`bg-white text-sm font-normal  p-4 whitespace-nowrap ${
-                    results?.length == numberOfQuestions
-                      ? "text-blue-600"
-                      : "text-blue-600"
-                  } w-[104px] h-[24px]`}
+                  className={`bg-white text-sm font-normal  p-4 whitespace-nowrap ${results?.length == numberOfQuestions
+                    ? "text-blue-600"
+                    : "text-blue-600"
+                    } w-[104px] h-[24px]`}
                   onClick={() => navigate(`/dashboard/result/${survey.id}`)}
                 >
                   Results
                 </Button>
               ) : (
                 <Button
-                  className={`bg-white text-sm p-4 whitespace-nowrap font-regular ${
-                    results?.length == numberOfQuestions
-                      ? "text-blue-600"
-                      : "text-blue-600"
-                  } w-[104px] h-[24px]`}
+                  className={`bg-white text-sm p-4 whitespace-nowrap font-regular ${results?.length == numberOfQuestions
+                    ? "text-blue-600"
+                    : "text-blue-600"
+                    } w-[104px] h-[24px]`}
                   onClick={() => {
-                    if(user.package=="freemium"){
+                    if (user.package == "freemium") {
                       toast.error("Please Subscribe to the Premium Package to get access to surveys")
-                    }else{
+                    } else {
                       navigate(`/dashboard/question/${survey.id}`)
                     }
-                }}
+                  }}
                 >
                   Start
                 </Button>
@@ -174,11 +172,11 @@ const SurveyCard = ({
               )}
               <Link
                 to={`/dashboard/survey/${survey.id}`}
-                className="text-2xl font-normal cursor-pointer uppercase"
+                className="text-2xl font-normal cursor-pointer uppercase  line-clamp-2"
               >
                 {survey?.title}
               </Link>
-              <p className="text-sm my-3 font-normal">{survey?.description}</p>
+              <p className="text-sm my-3 font-normal line-clamp-3 min-h-[60px]">{survey?.description}</p>
               {role == "admin" ? (
                 <p className="text-sm font-normal">
                   {numberOfQuestions} questions
