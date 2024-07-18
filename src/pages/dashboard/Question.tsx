@@ -56,7 +56,7 @@ const QuestionPage = () => {
 
   return (
     <div>
-      <Header heading={surveyInfo == undefined ? "Workplace" : `Workplace ${surveyInfo?.title}`} />
+      <Header heading={surveyInfo == undefined ? "" : `${surveyInfo?.title}`} />
       <QuestionForm questions={questions} />
     </div>
   );

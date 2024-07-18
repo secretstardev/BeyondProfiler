@@ -11,6 +11,7 @@ import { RecommendationData, Survey, User } from "../../Types";
 import { getSurveyById } from "../../helpers/surveys";
 import { collection, doc, getDoc } from "firebase/firestore";
 import { db } from "../../config/firebase";
+import PDFTemplate from "../../components/ui/PDFTemplate";
 
 const Result = () => {
   const [results, setResults] = useState([]);
@@ -70,17 +71,17 @@ const Result = () => {
 
   return (
     <div>
-      <Header heading={`Workplace ${survey?.title}`} />
+      <Header heading={`${survey?.title}`} />
       <div
-        className="flex justify-between text-[#3C3C3C] mt-16 mb-20"
+        className="w-full flex flex-col gap-y-24 justify-between text-[#3C3C3C] mt-16 mb-20"
         id="result"
       >
-        <div className="w-7/12" id="graphElement">
+        <div className="" id="graphElement">
           <h2 className="text-3xl font-normal ps-7">
             Results & Recommendations
           </h2>
           <p className="text-sm mt-2 mb-14 ps-7">{survey?.description}</p>
-          <div className="me-28">
+          <div id="ChartElement" className="me-28 w-full flex flex-row justify-center">
             <Chart sections={sections!} data={data} />
           </div>
         </div>
@@ -90,11 +91,25 @@ const Result = () => {
               return (
                 <div
                   key={index}
-                  className="relative z-0 bg-[url('https://img.freepik.com/free-vector/dynamic-gradient-grainy-background_23-2148963687.jpg')] bg-cover bg-end mt-5 rounded-md text-white font-medium flex flex-col justify-between items-start overflow-hidden"
+                  className="relative z-0  bg-cover bg-end mt-5 rounded-md font-medium flex flex-col justify-between items-start overflow-hidden"
+                // className="relative z-0 bg-[url('https://img.freepik.com/free-vector/dynamic-gradient-grainy-background_23-2148963687.jpg')] bg-cover bg-end mt-5 rounded-md text-white font-medium flex flex-col justify-between items-start overflow-hidden"
                 >
-                  <div className="absolute z-10 bg-blue-600/50 backdrop-blur-lg h-full w-full"></div>
-                  <div className="relative h-full w-full z-20 flex-col flex justify-between items-start p-5 ">
-                    <h2 className="text-2xl font-normal  mb-2 uppercase">
+                  <div className="absolute z-10 h-full w-full"></div>
+                  <h2 className="text-2xl bg-blue-800 w-full text-white font-normal p-5 mb-2 uppercase rounded-md">
+                    {val?.section}
+                  </h2>
+                  <div className=" text-black-800">
+                    {val?.recommendation !== null && (
+                      <div
+                        className="ms-2 font-normal"
+                        dangerouslySetInnerHTML={{
+                          __html: val?.recommendation,
+                        }}
+                      />
+                    )}
+                  </div>
+                  {/* <div className="relative bg-blue-600/50 h-full w-full z-20 flex-col flex justify-between items-start p-5 ">
+                    <h2 className="text-2xl w-full font-normal  mb-2 uppercase">
                       {val?.section}
                     </h2>
                     <div className="h-[2px] w-full bg-[#FFFFFF] rounded-full mb-3" />
@@ -106,7 +121,7 @@ const Result = () => {
                         }}
                       />
                     )}
-                  </div>
+                  </div> */}
                 </div>
               );
             })}
@@ -116,6 +131,8 @@ const Result = () => {
         <DownloadPdf
           elementId="recommendations"
           graphElementId="graphElement"
+          chartElementId="ChartElement"
+          result={survey?.description}
           emailId={user?.email || ""}
         />
         {/* <SendMail elementId="result" /> */}

@@ -98,11 +98,12 @@ export const handleLogin = async (
       if (user) {
         const { uid } = user.user;
         const userDocRef = doc(db, "users", uid);
-
         getDoc(userDocRef).then((docSnapshot) => {
           if (docSnapshot.exists()) {
             localStorage.setItem("role", docSnapshot.data().role);
             localStorage.setItem("email", docSnapshot.data().email);
+            localStorage.setItem("firstname", docSnapshot.data().firstName);
+            localStorage.setItem("lastname", docSnapshot.data().lastName);
             localStorage.setItem("uid", uid);
             localStorage.setItem("isLoggedIn", "true");
 

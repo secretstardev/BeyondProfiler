@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import ReactApexChart,{Props} from "react-apexcharts";
+import ReactApexChart, { Props } from "react-apexcharts";
 import "../../index.css";
 
 interface Props2 extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -22,7 +22,7 @@ const Chart: React.FC<Props2> = ({ sections, data }) => {
       ],
       options: {
         chart: {
-          type: "radar",      
+          type: "radar",
         },
         fill: {
           opacity: 0.2,
@@ -51,7 +51,7 @@ const Chart: React.FC<Props2> = ({ sections, data }) => {
   }, [sections, data]);
 
   return (
-    <div className="flex justify-center items-center w-96 h-96 mt-36 ml-24">
+    <div className="flex justify-center items-center w-[700px] h-[560px]">
       {sections?.length > 0 && data?.length > 0 && (
         <ReactApexChart
           options={chartData?.options}
