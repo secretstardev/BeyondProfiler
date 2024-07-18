@@ -1,5 +1,7 @@
 
 import LoginForm from "../components/ui/forms/LoginForm";
+import logo from "../../public/assets/images/beyond_logo.png"
+import mainImage from "../../public/assets/images/login_image.jpeg"
 
 const Login = () => {
   return (
@@ -9,9 +11,7 @@ const Login = () => {
           <div className="lg:flex items-center justify-start h-full">
             <div className="w-full lg:max-w-md">
               <img
-                src="/assets/images/logo.svg"
-                width={98}
-                height={124}
+                src={logo}
                 alt="logo"
               />
               <h5 className="text-[26px] font-semibold mb-3 mt-10">
@@ -25,12 +25,12 @@ const Login = () => {
           </div>
         </div>
         <div className="w-1/2 h-[100vh] lg:flex hidden items-center p-10">
-          <div className="w-full h-full bg-[#FFF8E1] shadow-lg rounded-lg  p-5">
-            <div className="flex items-start justify-center">
+          <div className="w-full h-full  shadow-lg rounded-lg  p-5">
+            <div className=" w-full h-full flex flex-row items-center justify-center">
               <img
-                src="/assets/images/login-vector.svg"
+                src={mainImage}
                 alt="background"
-                className="object-fill h-full w-"
+                className="object-fit "
               />
             </div>
           </div>
