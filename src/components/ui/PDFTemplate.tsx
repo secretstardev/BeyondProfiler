@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   nameposition: {
     position: 'absolute',
     left: '7.5%',
-    top: '87%',
+    top: '85%',
     // transform: 'translate(0%, -50%)',
     textAlign: 'left',
     width: '85%',
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     fontSize: 16
   },
   nameText: {
-    fontSize: 24,
+    fontSize: 20,
   }
 });
 
@@ -80,6 +80,14 @@ export default function PDFTemplate(props: any) {
     return str.replace(/<[^>]*>/g, '');
   }
 
+  const getToday = () => {
+    const dateObject = new Date();
+    const year = dateObject.getFullYear();
+    const month = String(dateObject.getMonth() + 1).padStart(2, '0'); // Months are 0-index, so we need to add 1. Pad with 0 to make it always 2 digits
+    const day = String(dateObject.getDate()).padStart(2, '0'); //Pad with 0 to make it always 2 digits
+    return `${year}-${month}-${day}`;
+  }
+
   return (
     <Document>
       {/* <Page size="A4" style={styles.page}>
@@ -89,7 +97,9 @@ export default function PDFTemplate(props: any) {
         <View style={styles.section}>
           <Image source={headingImage} style={styles.image} />
           <View style={styles.nameposition}>
-            <Text style={styles.nameText}>{localStorage.getItem("firstname") + " " + localStorage.getItem("lastname")}</Text>
+            <Text style={styles.nameText}>{localStorage.getItem("childname") + "  " + localStorage.getItem("birthday")}</Text>
+            <Text style={{ fontSize: 12 }}>{"Survey date: " + getToday()}</Text>
+            <Text style={{ fontSize: 16 }}>{"Completed by: " + localStorage.getItem("firstname") + "  " + localStorage.getItem("lastname")}</Text>
           </View>
         </View>
       </Page>
@@ -110,17 +120,46 @@ export default function PDFTemplate(props: any) {
           <View style={{
             position: 'absolute',
             left: '5%',
-            top: '10%',
+            top: '8%',
             // transform: 'translate(0%, -50%)',
             textAlign: 'center',
             width: '90%'
           }}
           >
-            <Text style={{ fontSize: 48, color: '#FAA942' }}>Results</Text>
-            <Text style={{ fontSize: 20, color: '#FAA942', marginTop: '36px' }}>
+            <Text style={{ fontSize: 24, color: '#FAA942' }}>Results</Text>
+            <Text style={{ fontSize: 16, color: '#FAA942', marginTop: '16px' }}>
               {props.result}
             </Text>
-            <Image style={{ marginTop: "36px", marginBottom: "36px", paddingTop: "24px", paddingBottom: "24px" }} source={chartImage} />
+            <View style={{ paddingTop: "24px", paddingBottom: "24px", }}>
+              <Image style={{ marginTop: "16px", marginBottom: "16px", padding: "1px", border: " 1px solid #97D1A5" }} source={chartImage} />
+            </View>
+            <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+              <View style={{ width: "30%", padding: "4px", backgroundColor: "white", border: " 1px solid #97D1A5" }}>
+                <Text style={{ fontSize: 10, fontWeight: "extrabold", textAlign: 'left' }}>
+                  <Text style={{ textDecoration: "underline" }}>29 and below</Text>  : Independent/Typically Independent
+                </Text>
+                <Text style={{ fontSize: 8, marginTop: "4px", textAlign: 'left' }}>
+                  Your child is generally capable of performing certain tasks or activities on their own without requiring constant assistance.
+                </Text>
+              </View>
+              <View style={{ width: "30%", padding: "4px", backgroundColor: "white", border: " 1px solid #97D1A5" }}>
+                <Text style={{ fontSize: 10, fontWeight: "extrabold", textAlign: 'left' }}>
+                  <Text style={{ textDecoration: "underline" }}>Between 30 and 69</Text> : Semi-Independent
+                </Text>
+                <Text style={{ fontSize: 8, marginTop: "4px", textAlign: 'left' }}>
+                  Your child can perform certain tasks or activities with some degree of independence but still needs guidance and instruction from an adult.
+                </Text>
+              </View>
+              <View style={{ width: "30%", padding: "4px", backgroundColor: "white", border: " 1px solid #97D1A5" }}>
+                <Text style={{ fontSize: 10, fontWeight: "extrabold", textAlign: 'left' }}>
+                  <Text style={{ textDecoration: "underline" }}>70 and above</Text> : Not Yet Independent/Typically Dependent
+                </Text>
+                <Text style={{ fontSize: 8, marginTop: "4px", textAlign: 'left' }}>
+                  Your child is not yet able to perform certain tasks or activities on their own and relies heavily on adult assistance.
+                </Text>
+              </View>
+
+            </View>
           </View>
         </View>
       </Page>

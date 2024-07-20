@@ -1,6 +1,9 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./src/**/*"],
+  content: [
+    "./src/**/*",
+    "./node_modules/tailwind-datepicker-react/dist/**/*.js",
+  ],
   theme: {
     extend: {
       backgroundImage: {

@@ -6,6 +6,7 @@ import { handleLogout } from "../helpers/auth";
 import SidebarItem from "./ui/SidebarItem";
 import { useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
+import sidebarlogo from "../../public/assets/images/sidebar-logo.png"
 
 interface Props {
   children: React.ReactNode;
@@ -44,9 +45,9 @@ const Sidebar: React.FC<Props> = ({ children }) => {
         <div className="flex flex-col justify-start center px-8 gap-2 w-full">
           <div className="my-16 w-full">
             <img
-              src="/assets/images/logo.svg"
+              src={sidebarlogo}
               alt="logo"
-              className="h-24 w-24 mix-blend-lighten invert"
+              className=""
             />
           </div>
 
