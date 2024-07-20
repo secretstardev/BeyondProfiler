@@ -25,6 +25,12 @@ import EditSubSection from "../../components/ui/Modals/Sections copy/EditSubSect
 import { BiDotsVertical } from "react-icons/bi";
 import { Database } from "../../Types/supabase";
 import ClipLoader from "react-spinners/ClipLoader";
+import Input from "../../components/ui/Input";
+import Datepicker from "tailwind-datepicker-react"
+import DatePicker from "tailwind-datepicker-react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCoffee, faCalendar } from '@fortawesome/free-solid-svg-icons'
+import { toast } from "react-toastify";
 
 const SurveyDetail = () => {
   const [questions, setQuestions] = useState<Array<Question>>();
@@ -50,6 +56,10 @@ const SurveyDetail = () => {
   const [isEditRecoOpen, setIsEditRecoOpen] = useState(false);
   const [recommendations, setRecommendations] =
     useState<Recommendation | null>();
+  const [childName, setChildName] = useState("");
+  const [birthday, setBirthday] = useState("")
+  const [dateShow, setDateShow] = useState<boolean>(false)
+  const [selectedDate, setSelectedDate] = useState<any>()
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -116,7 +126,60 @@ const SurveyDetail = () => {
     setSubSectionId("");
     setRender(true);
   };
-  // console.log("survey",survey)
+
+  const handleDateChange = (date: Date) => {
+    const dateObject = new Date(date);
+    const year = dateObject.getUTCFullYear();
+    const month = String(dateObject.getUTCMonth() + 1).padStart(2, '0'); // Months are 0-indexed, so plus 1 is needed. Pad with 0 to always be 2 digits
+    const day = String(dateObject.getUTCDate()).padStart(2, '0'); // Pad with 0 to always be 2 digits
+    setSelectedDate(`${year}-${month}-${day}`);
+    setBirthday(`${year}-${month}-${day}`);
+  }
+  const handleDateClose = (state: boolean) => {
+    setDateShow(state)
+  }
+
+  const datepickOptions = {
+    title: "Select date of birth",
+    autoHide: true,
+    todayBtn: false,
+    clearBtn: false,
+    clearBtnText: "Clear",
+    maxDate: new Date("2030-01-01"),
+    minDate: new Date("1950-01-01"),
+    datepickerClassNames: "top-12",
+    // defaultDate: new Date("2022-01-01"),
+    language: "en",
+    disabledDates: [],
+    weekDays: ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"],
+    inputNameProp: "date",
+    inputIdProp: "date",
+    inputPlaceholderProp: "Select Birthday",
+  }
+
+  const onStart = () => {
+    console.log(birthday, childName);
+    if (birthday != "" && childName != "") {
+      localStorage.setItem("childname", childName);
+      localStorage.setItem("birthday", birthday);
+      navigate(`/dashboard/question/${currentUrl}`)
+    }
+    else {
+      if (childName == "")
+        toast.error("Child name cannot be empty");
+      else if (birthday == "")
+        toast.error("Birthday cannot be empty");
+    }
+  }
+
+  useEffect(() => {
+    // if (localStorage.getItem("childname"))
+    //   setChildName(localStorage.getItem("childname"));
+    // if (localStorage.getItem("birthday"))
+    //   setChildName(localStorage.getItem("birthday"));
+  }, [])
+
+
   return (
     <>
       {render || loading ? (
@@ -146,6 +209,27 @@ const SurveyDetail = () => {
                 </p>
               </div>
             </div>
+            <div className="">
+              <p className=" text-[24px] mb-5 mt-10">Input the name and birthday of child</p>
+              <div className=" relative flex flex-col gap-5 mb-7">
+                <Input
+                  placeholder="Name"
+                  value={childName}
+                  onChange={(e) => setChildName(e.target.value)}
+                  required
+                />
+                <div className=" relative w-full">
+                  <DatePicker options={datepickOptions} show={dateShow} onChange={handleDateChange} setShow={handleDateClose}>
+                    <div className=" relative w-full">
+                      <div className=" absolute py-2 pl-3">
+                        <FontAwesomeIcon className=" text-gray-500" icon={faCalendar} />
+                      </div>
+                      <input type="text" className=" w-full border-[1px] py-2.5 pl-8 pr-3 text-gray-900 rounded-md text-sm focus:outline-none border-neutral-300 placeholder-lightgray" placeholder="Select date of birth" value={selectedDate} onFocus={() => setDateShow(true)} readOnly />
+                    </div>
+                  </DatePicker>
+                </div>
+              </div>
+            </div>
             <div className="flex justify-between items-center mt-10">
               <h2 className="text-2xl text-primary font-normal">
                 {role == "admin"
@@ -155,7 +239,7 @@ const SurveyDetail = () => {
               {role !== "admin" ? (
                 <Button
                   className="bg-[#3C3C3C] text-lg text-white w-[182px] h-[49px]"
-                  onClick={() => navigate(`/dashboard/question/${currentUrl}`)}
+                  onClick={() => onStart()}
                 >
                   Start
                 </Button>

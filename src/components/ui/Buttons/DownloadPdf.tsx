@@ -77,18 +77,11 @@ const DownloadPdf: React.FC<Props> = ({
   const handleSendEmail = () => {
     console.log(emailId);
     setLoading(true);
-    // const element = document.getElementById(elementId);
-    const myhtml = `<p>You finished the survey and please use this link to see the result: <a href='${window.location.pathname}'>${window.location.pathname}</a></p>`
-
-    // const emailParams = {
-    //   to_email: emailId,
-    //   subject: "Result of Survey at ND_PROFILER",
-    //   my_html: `Hello`,
-    // };
 
     const emailParams = {
       from_name: "BeyondProfiler",
       to_name: localStorage.getItem("firstname"),
+      child_name: localStorage.getItem("childname"),
       subject: "Result of Survey at ND_PROFILER",
       result_link: "http://localhost:5173" + window.location.pathname,
     };
