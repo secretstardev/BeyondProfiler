@@ -81,7 +81,7 @@ const SurveyCard = ({
             <div>
               <Link
                 to={`/dashboard/survey/${survey.id}`}
-                className="text-2xl font-normal cursor-pointer uppercase line-clamp-2"
+                className="text-2xl font-normal cursor-pointer uppercase line-clamp-2 min-h-[64px]"
               >
                 {survey?.title}
               </Link>
