@@ -269,11 +269,12 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
         results: uniqueResults,
       });
 
-      console.log({ surveyId, results: uniqueResults });
+      console.log("uniqueResults: ", { surveyId, results: uniqueResults });
       // console.log({uniqueResults})
       calculateResults(uniqueResults);
     }
   }, [isOpen]);
+
   const calculateResults = async (uniqueResults) => {
     // Initialize result object
     const resultObject = {

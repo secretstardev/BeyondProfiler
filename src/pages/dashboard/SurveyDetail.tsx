@@ -209,27 +209,32 @@ const SurveyDetail = () => {
                 </p>
               </div>
             </div>
-            <div className="">
-              <p className=" text-[24px] mb-5 mt-10">Input the name and birthday of child</p>
-              <div className=" relative flex flex-col gap-5 mb-7">
-                <Input
-                  placeholder="Name"
-                  value={childName}
-                  onChange={(e) => setChildName(e.target.value)}
-                  required
-                />
-                <div className=" relative w-full">
-                  <DatePicker options={datepickOptions} show={dateShow} onChange={handleDateChange} setShow={handleDateClose}>
+            {
+              localStorage.getItem("role") != "admin" ?
+                <div className="">
+                  <p className=" text-[24px] mb-5 mt-10">Input the name and birthday of child</p>
+                  <div className=" relative flex flex-col gap-5 mb-7">
+                    <Input
+                      placeholder="Name"
+                      value={childName}
+                      onChange={(e) => setChildName(e.target.value)}
+                      required
+                    />
                     <div className=" relative w-full">
-                      <div className=" absolute py-2 pl-3">
-                        <FontAwesomeIcon className=" text-gray-500" icon={faCalendar} />
-                      </div>
-                      <input type="text" className=" w-full border-[1px] py-2.5 pl-8 pr-3 text-gray-900 rounded-md text-sm focus:outline-none border-neutral-300 placeholder-lightgray" placeholder="Select date of birth" value={selectedDate} onFocus={() => setDateShow(true)} readOnly />
+                      <DatePicker options={datepickOptions} show={dateShow} onChange={handleDateChange} setShow={handleDateClose}>
+                        <div className=" relative w-full">
+                          <div className=" absolute py-2 pl-3">
+                            <FontAwesomeIcon className=" text-gray-500" icon={faCalendar} />
+                          </div>
+                          <input type="text" className=" w-full border-[1px] py-2.5 pl-8 pr-3 text-gray-900 rounded-md text-sm focus:outline-none border-neutral-300 placeholder-lightgray" placeholder="Select date of birth" value={selectedDate} onFocus={() => setDateShow(true)} readOnly />
+                        </div>
+                      </DatePicker>
                     </div>
-                  </DatePicker>
+                  </div>
                 </div>
-              </div>
-            </div>
+                :
+                <></>
+            }
             <div className="flex justify-between items-center mt-10">
               <h2 className="text-2xl text-primary font-normal">
                 {role == "admin"
