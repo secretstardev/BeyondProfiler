@@ -7,6 +7,9 @@ import headingImage from '../../../public/assets/pdfimages/1.png'
 import secondImage from '../../../public/assets/pdfimages/2n.jpg'
 import thirdImage from '../../../public/assets/pdfimages/3.png'
 import lastImage from '../../../public/assets/pdfimages/last.png'
+import attention1 from '../../../public/assets/pdfimages/attention1.png'
+import attention2 from '../../../public/assets/pdfimages/attention2.png'
+import attention3 from '../../../public/assets/pdfimages/attention3.png'
 
 const styles = StyleSheet.create({
   page: {
@@ -27,6 +30,10 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: '100%'
+  },
+  image2: {
+    width: '100%',
+    height: '30%'
   },
   centerContent: {
     position: 'absolute',
@@ -77,7 +84,7 @@ export default function PDFTemplate(props: any) {
   }, [document.getElementById("recommendations").innerHTML.toString()])
 
   const removeHtmlTags = (str: String) => {
-    return str.replace(/<[^>]*>/g, '');
+    return str.replace(/<[^>]*>/g, '').replace("&nbsp;", "");
   }
 
   const getToday = () => {
@@ -97,8 +104,8 @@ export default function PDFTemplate(props: any) {
         <View style={styles.section}>
           <Image source={headingImage} style={styles.image} />
           <View style={styles.nameposition}>
-            <Text style={styles.nameText}>{localStorage.getItem("childname") + "  " + localStorage.getItem("birthday")}</Text>
-            <Text style={{ fontSize: 12 }}>{"Survey date: " + getToday()}</Text>
+            <Text style={styles.nameText}>{props.resultInfo?.childname + "  " + props.resultInfo?.childbirthday}</Text>
+            <Text style={{ fontSize: 12 }}>{props.resultInfo?.completedAt}</Text>
             <Text style={{ fontSize: 16 }}>{"Completed by: " + localStorage.getItem("firstname") + "  " + localStorage.getItem("lastname")}</Text>
           </View>
         </View>
@@ -169,27 +176,36 @@ export default function PDFTemplate(props: any) {
             recommendationObj && <>
               {
                 Array.from(document.getElementById("recommendations")!.children).map((item: any, index: any) => {
-                  return <View>
-                    <Text key={index} style={{ padding: "12px", width: "100%", backgroundColor: "#2040B0", color: "#FFFFFF", marginTop: "12px" }}>
-                      {(Array.from(item!.children)[1] as HTMLElement).innerHTML}
-                    </Text>
-                    {
-                      Array.from((Array.from(item!.children)[2] as HTMLElement).children[0].children).map((sItem: any, index: any) => {
-                        return <>
-                          {
-                            Array.from(sItem!.children).length == 0 ?
-                              <Text style={{ fontSize: 10, color: "#444444", marginTop: "4px" }}>{removeHtmlTags(sItem.innerHTML.toString())}</Text> :
-                              (Array.from(sItem!.children)[0] as HTMLElement).tagName == "STRONG" ?
-                                <Text style={{ fontSize: 12, color: "#000000", fontWeight: "bold", marginTop: "12px" }}>{removeHtmlTags(sItem.innerHTML.toString())}</Text> :
-                                (Array.from(sItem!.children)[0] as HTMLElement).tagName == "BR" ?
-                                  <Text style={{ fontSize: 8, color: "#444444", }}>&nbsp;</Text> :
-                                  <Text style={{ fontSize: 10, color: "#444444", marginTop: "4px" }}>{removeHtmlTags(sItem.innerHTML.toString())}</Text>
-                          }
-                        </>
-                      })
-                    }
-                    <Text style={{ fontSize: 20 }}>&nbsp;</Text>
-                  </View>
+                  return index == 0 ?
+                    <View>
+                      <Text key={index} style={{ padding: "12px", width: "100%", backgroundColor: "#2040B0", color: "#FFFFFF", marginTop: "12px" }}>
+                        {(Array.from(item!.children)[1] as HTMLElement).innerHTML}
+                      </Text>
+                      <Image source={attention1} style={styles.image} />
+                      {/* <Image source={attention2} style={styles.image2} /> */}
+                      <Image source={attention3} style={styles.image} />
+                    </View> :
+                    <View>
+                      <Text key={index} style={{ padding: "12px", width: "100%", backgroundColor: "#2040B0", color: "#FFFFFF", marginTop: "12px" }}>
+                        {(Array.from(item!.children)[1] as HTMLElement).innerHTML}
+                      </Text>
+                      {
+                        Array.from((Array.from(item!.children)[2] as HTMLElement).children[0].children).map((sItem: any, index: any) => {
+                          return <>
+                            {
+                              Array.from(sItem!.children).length == 0 ?
+                                <Text style={{ fontSize: 10, color: "#444444", marginTop: "4px" }}>{removeHtmlTags(sItem.innerHTML.toString())}</Text> :
+                                (Array.from(sItem!.children)[0] as HTMLElement).tagName == "STRONG" ?
+                                  <Text style={{ fontSize: 12, color: "#000000", fontWeight: "bold", marginTop: "12px" }}>{removeHtmlTags(sItem.innerHTML.toString())}</Text> :
+                                  (Array.from(sItem!.children)[0] as HTMLElement).tagName == "BR" ?
+                                    <Text style={{ fontSize: 8, color: "#444444", }}>&nbsp;</Text> :
+                                    <Text style={{ fontSize: 10, color: "#444444", marginTop: "4px" }}>{removeHtmlTags(sItem.innerHTML.toString())}</Text>
+                            }
+                          </>
+                        })
+                      }
+                      <Text style={{ fontSize: 20 }}>&nbsp;</Text>
+                    </View>
                 })
               }
             </>

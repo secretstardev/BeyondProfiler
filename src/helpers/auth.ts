@@ -58,6 +58,9 @@ export const handleSignUp = async (
         localStorage.setItem("role", role);
         localStorage.setItem("uid", uid);
         localStorage.setItem("isLoggedIn", "true");
+        
+        localStorage.setItem("firstname", firstName);
+        localStorage.setItem("lastname", lastName);
         toast.success("Account created successfully");
         window.location.href = `/dashboard/${
           role == "admin" ? "admin" : "user"

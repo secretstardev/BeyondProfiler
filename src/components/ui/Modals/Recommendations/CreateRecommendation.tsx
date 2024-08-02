@@ -20,6 +20,7 @@ const CreateRecommendation: React.FC<Props> = ({
   setIsCreateOpen,
   section,
 }) => {
+  const [option1, setOption1] = useState<string>("");
   const [option2, setOption2] = useState<string>("");
   const [option3, setOption3] = useState<string>("");
   const [option4, setOption4] = useState<string>("");
@@ -31,16 +32,21 @@ const CreateRecommendation: React.FC<Props> = ({
     getSectionById(section.id, setSectionDetails);
   }, [sectionId]);
   useEffect(() => {
+    console.log("sectionDetails\n", sectionDetails)
+    // setOption1(sectionDetails?.from0to25 ?? "");
     setOption2(sectionDetails?.from25to50 ?? "");
     setOption3(sectionDetails?.from50to75 ?? "");
     setOption4(sectionDetails?.from75to100 ?? "");
   }, [sectionDetails]);
+
   const handelClick = () => {
     const recommendationData = {
+      // from0to25: option1,
       from25to50: option2,
       from50to75: option3,
       from75to100: option4,
     };
+
     if (!option4 && !option3 && !option2) {
       return toast.error("text field cannot be empty");
     } else {
@@ -57,6 +63,15 @@ const CreateRecommendation: React.FC<Props> = ({
 
   return (
     <div>
+      {/* <h6 className="text-lg text-primary font-semibold mb-3">
+        From 0% to 25% results
+      </h6>
+      <ReactQuill
+        theme="snow"
+        value={option1}
+        onChange={(val) => setOption1(val)}
+        className="mb-7"
+      /> */}
       <h6 className="text-lg text-primary font-semibold mb-3">
         From 26% to 50% results
       </h6>

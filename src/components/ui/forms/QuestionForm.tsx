@@ -43,6 +43,7 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
       sectionRecThree: string;
     }>
   >([]);
+  const [resultId, setResultId] = useState("");
 
   const pathname = window.location.pathname;
   const navigate = useNavigate();
@@ -75,6 +76,7 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
     const nextIndex = index + 1;
 
     if (allQuestions.length - 1 !== index) {
+      setProgress(100 * nextIndex / allQuestions.length)
       setIndex(nextIndex);
       setCurrentQuestion(allQuestions[nextIndex]);
       if (tempResult.filter((item: any) => item.questionId == allQuestions[nextIndex].id).length != 0) {
@@ -275,10 +277,29 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
     }
   }, [isOpen]);
 
+  const getCurrentFormattedDate = () => {
+    const date = new Date();
+    const year = date.getFullYear();
+    // getMonth() returns month from 0 (January) to 11 (December), so we add 1
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  const generateIDbyDate = () => {
+    const milliSecondsSinceEpoch = new Date().getTime();
+    setResultId(milliSecondsSinceEpoch.toString(16));
+    return milliSecondsSinceEpoch.toString(16);
+  }
+
   const calculateResults = async (uniqueResults) => {
     // Initialize result object
     const resultObject = {
+      resultId: generateIDbyDate(),
       surveyId: surveyId,
+      childname: localStorage.getItem("childname"),
+      childbirthday: localStorage.getItem("birthday"),
+      completedAt: getCurrentFormattedDate(),
       scoreBySection: [],
       recommendations: [],
     };
@@ -526,7 +547,7 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
           <Button
             className="bg-primary text-md text-white mb-5  h-[40px]"
             type="submit"
-            onClick={() => navigate(`/dashboard/result/${surveyId}`)}
+            onClick={() => navigate(`/dashboard/result/${surveyId}/${resultId}`)}
           >
             Show Result
           </Button>
