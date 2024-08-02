@@ -24,6 +24,7 @@ const Result = () => {
 
   const pathname = window.location.pathname;
   const surveyId = pathname?.split("/")[3];
+  const resultId = pathname?.split("/")[4];
 
   useEffect(() => {
     const uid = localStorage.getItem("uid")!;
@@ -57,21 +58,24 @@ const Result = () => {
   // }, [results, surveyId]);
 
   useEffect(() => {
-    setSections(results[0]?.recommendations?.map((val: any) => val.section));
+    console.log("results:", results);
+    const result = results.filter((item: any) => item.resultId == resultId)[0]
+    setSections(result?.recommendations?.map((val: any) => val.section));
     setData(
-      results[0]?.scoreBySection?.map((val: any) => val.score.toFixed(0))
+      result?.scoreBySection?.map((val: any) => val.score.toFixed(0))
     );
   }, [recommendations, results]);
 
   useEffect(() => {
     if (results) {
-      setRecommendations(results[0]?.recommendations);
+      const result = results.filter((item: any) => item.resultId == resultId)[0]
+      setRecommendations(result?.recommendations);
     }
   }, [results]);
 
   return (
     <div>
-      <Header heading={`${survey?.title}`} />
+      <Header heading={`Results: ${survey?.title == undefined ? '' : survey?.title}`} />
       <div
         className="w-full flex flex-col gap-y-24 justify-between text-[#3C3C3C] mt-16 mb-20"
         id="result"
@@ -133,6 +137,7 @@ const Result = () => {
           graphElementId="graphElement"
           chartElementId="ChartElement"
           result={survey?.description}
+          resultInfo={results.filter((item: any) => item.resultId == resultId)[0]}
           emailId={user?.email || ""}
         />
         {/* <SendMail elementId="result" /> */}

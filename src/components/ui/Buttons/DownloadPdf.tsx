@@ -13,6 +13,7 @@ interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   emailId: string;
   graphElementId: string;
   result: string;
+  resultInfo: any;
   chartElementId: any;
 }
 
@@ -21,6 +22,7 @@ const DownloadPdf: React.FC<Props> = ({
   emailId,
   graphElementId,
   result,
+  resultInfo,
   chartElementId,
 }) => {
   const [loading, setLoading] = useState(false);
@@ -131,7 +133,7 @@ const DownloadPdf: React.FC<Props> = ({
 
       <PDFDownloadLink
         document={
-          <PDFTemplate result={result} chart={document.getElementById(chartElementId)} recommendation={document.getElementById(elementId)} />
+          <PDFTemplate result={result} resultInfo={resultInfo} chart={document.getElementById(chartElementId)} recommendation={document.getElementById(elementId)} />
         }
         fileName={"file.pdf"}
       >

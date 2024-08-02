@@ -110,7 +110,8 @@ const SurveyCard = ({
                     ? "text-blue-600"
                     : "text-blue-600"
                     } w-[104px] h-[24px]`}
-                  onClick={() => navigate(`/dashboard/result/${survey.id}`)}
+                  // onClick={() => navigate(`/dashboard/result/${survey.id}`)}
+                  onClick={() => navigate(`/dashboard/results/${survey.id}`)}
                 >
                   Results
                 </Button>
@@ -172,7 +173,7 @@ const SurveyCard = ({
               )}
               <Link
                 to={`/dashboard/survey/${survey.id}`}
-                className="text-2xl font-normal cursor-pointer uppercase  line-clamp-2"
+                className="text-2xl font-normal cursor-pointer uppercase  line-clamp-2  min-h-[64px]"
               >
                 {survey?.title}
               </Link>
