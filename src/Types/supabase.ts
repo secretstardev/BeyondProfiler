@@ -49,6 +49,7 @@ export interface Database {
       }
       sections: {
         Row: {
+          from0to25: string | null
           from25to50: string | null
           from50to75: string | null
           from75to100: string | null
@@ -57,6 +58,7 @@ export interface Database {
           title: string | null
         }
         Insert: {
+          from0to25: string | null
           from25to50?: string | null
           from50to75?: string | null
           from75to100?: string | null
@@ -65,6 +67,7 @@ export interface Database {
           title?: string | null
         }
         Update: {
+          from0to25: string | null
           from25to50?: string | null
           from50to75?: string | null
           from75to100?: string | null
