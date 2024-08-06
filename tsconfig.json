@@ -13,9 +13,11 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "strict": false,
+    "strict": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
+    "incremental": true,
+    "noUncheckedIndexedAccess": true,
     // "noFallthroughCasesInSwitch": true
   },
   "include": ["src"],
