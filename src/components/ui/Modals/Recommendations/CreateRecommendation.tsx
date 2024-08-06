@@ -33,7 +33,7 @@ const CreateRecommendation: React.FC<Props> = ({
   }, [sectionId]);
   useEffect(() => {
     console.log("sectionDetails\n", sectionDetails)
-    // setOption1(sectionDetails?.from0to25 ?? "");
+    setOption1(sectionDetails?.from0to25 ?? "");
     setOption2(sectionDetails?.from25to50 ?? "");
     setOption3(sectionDetails?.from50to75 ?? "");
     setOption4(sectionDetails?.from75to100 ?? "");
@@ -41,7 +41,7 @@ const CreateRecommendation: React.FC<Props> = ({
 
   const handelClick = () => {
     const recommendationData = {
-      // from0to25: option1,
+      from0to25: option1,
       from25to50: option2,
       from50to75: option3,
       from75to100: option4,
@@ -63,7 +63,7 @@ const CreateRecommendation: React.FC<Props> = ({
 
   return (
     <div>
-      {/* <h6 className="text-lg text-primary font-semibold mb-3">
+      <h6 className="text-lg text-primary font-semibold mb-3">
         From 0% to 25% results
       </h6>
       <ReactQuill
@@ -71,7 +71,7 @@ const CreateRecommendation: React.FC<Props> = ({
         value={option1}
         onChange={(val) => setOption1(val)}
         className="mb-7"
-      /> */}
+      />
       <h6 className="text-lg text-primary font-semibold mb-3">
         From 26% to 50% results
       </h6>
