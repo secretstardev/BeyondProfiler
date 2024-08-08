@@ -34,13 +34,11 @@ export const getQuestionsBySubsectionId = async (
     setIsLoading(false);
     const formattedData: any = data.map((question: any) => ({
       id: question.id,
-      text: question.title || "",
-      options: [
-        question.option1 || "",
-        question.option2 || "",
-        question.option3 || "",
-        question.option4 || "",
-      ].filter((option) => option !== ""), // This will remove null options
+      title: question.title || "",
+      option1: question.option1 || "",
+      option2: question.option2 || "",
+      option3: question.option3 || "",
+      option4: question.option4 || "",
       subsectionid: question.subsectionid || 0,
     }));
     setQuestions(formattedData);

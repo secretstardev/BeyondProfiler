@@ -75,6 +75,7 @@ const SurveyDetail = () => {
 
     const uid = localStorage.getItem("uid")!;
     const fetchData = async () => {
+      console.log("currentURL: ", currentUrl);
       getResultsData(uid, survey!.id, setResults);
       getSections(currentUrl, setSections);
       setQuestions(await getQuestionsById(currentUrl));
@@ -88,24 +89,29 @@ const SurveyDetail = () => {
   }, [currentUrl, survey?.id, render]);
 
   useEffect(() => {
+    console.log("sections:\n", sections);
+  }, [sections])
+
+
+  useEffect(() => {
     const fetchData = async () => {
-      //   try {
-      //     const db = getFirestore();
-      //     const surveyDocRef = doc(collection(db, "surveys"), survey?.id);
-      //     const sectionDocRef = doc(surveyDocRef, "sections", sectionId);
-      //     const recommendationsCollectionRef = collection(
-      //       sectionDocRef,
-      //       "recommendations"
-      //     );
-      //     const querySnapshot = await getDocs(recommendationsCollectionRef);
-      //     const recommendationsData = querySnapshot.docs.map((doc) => {
-      //       return { id: doc.id, ...doc.data() } as Recommendation;
-      //     });
-      //     setRecommendations(recommendationsData[0]);
-      //   } catch (error) {
-      //     console.error("Error fetching data:", error);
-      //     setRecommendations(null);
-      //   }
+      // try {
+      //   const db = getFirestore();
+      //   const surveyDocRef = doc(collection(db, "surveys"), survey?.id);
+      //   const sectionDocRef = doc(surveyDocRef, "sections", sectionId);
+      //   const recommendationsCollectionRef = collection(
+      //     sectionDocRef,
+      //     "recommendations"
+      //   );
+      //   const querySnapshot = await getDocs(recommendationsCollectionRef);
+      //   const recommendationsData = querySnapshot.docs.map((doc) => {
+      //     return { id: doc.id, ...doc.data() } as Recommendation;
+      //   });
+      //   setRecommendations(recommendationsData[0]);
+      // } catch (error: any) {
+      //   console.error("Error fetching data:", error);
+      //   setRecommendations(null);
+      // }
     };
 
     fetchData();
@@ -263,7 +269,7 @@ const SurveyDetail = () => {
             </div>
             <div className="mt-5 ms-5 mb-10">
               <ul>
-                {sections && Object.keys(sections).map((val: any, index: any) => {
+                {sections && Array.from(Object.values(sections)).map((val: any, index: any) => {
                   return (
                     <div key={index}>
                       <div className="py-[2px]">

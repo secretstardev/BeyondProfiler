@@ -81,7 +81,7 @@ export const getSections = async (
     toast.error(error.message);
   } else {
     // toast.success("All Surveys fetched successfully");
-    // console.log(data);
+    // console.log("data", data);
     setSections(data);
   }
 };
@@ -132,7 +132,6 @@ export const createSection = async (
   const { error, data } = await supabaseClient.from("sections").insert({
     title: title,
     surveyid: surveryId,
-    from0to25: null,
   });
   if (!error) {
     toast.success("Section created successfully");
@@ -155,7 +154,6 @@ export const updateSection = async (
     .update({
       title: title,
       surveyid: surveyId,
-      from0to25: null,
     })
     .eq("id", sectionId);
   if (!error) {

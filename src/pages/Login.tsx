@@ -6,7 +6,7 @@ import mainImage from "../../public/assets/images/login_image.jpeg"
 const Login = () => {
   return (
     <>
-      <div className="lg:flex lg:py-0 py-20 items-center justify-center w-full h-[100vh]">
+      <div className="lg:flex lg:py-0 py-20 items-center justify-center w-full min-h-[100vh]">
         <div className="lg:w-1/2 w-full flex justify-center items-center">
           <div className="lg:flex items-center justify-start h-full">
             <div className="w-full lg:max-w-md">
