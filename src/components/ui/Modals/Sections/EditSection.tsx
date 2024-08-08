@@ -1,5 +1,5 @@
 ;
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Input from "../../Input";
 import Button from "../../Button";
 import { Section } from "../../../../Types";
@@ -13,10 +13,15 @@ interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const EditSection: React.FC<Props> = ({ surveyId, setIsOpen, section, setRender }) => {
+
+  useEffect(() => {
+    console.log("section:", section);
+  }, [section])
+
   const [title, setTitle] = useState<string>(section?.title);
 
   const handleUpdate = () => {
-    updateSection(surveyId!, section?.id, section?.title, setRender);
+    updateSection(surveyId!, section?.id, title, setRender);
     setIsOpen(false);
   };
 

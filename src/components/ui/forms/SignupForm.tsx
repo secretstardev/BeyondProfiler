@@ -76,7 +76,7 @@ const SignupForm = () => {
       </div>
       <div className="mt-5">
         <h6 className="text-lg font-semibold md:mb-5 mb-3 md:mt-0 mt-3">
-          Select User
+          Select Profile Type
         </h6>
         <div className="flex">
           <div

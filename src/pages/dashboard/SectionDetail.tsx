@@ -56,6 +56,11 @@ const SectionDetail = () => {
     setQuestionId("");
   };
 
+  useEffect(() => {
+    console.log("questions:\n", questions);
+  }, [questions])
+
+
   return (
     <>
       {render ? (
