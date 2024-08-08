@@ -72,7 +72,9 @@ const UserDashboard = () => {
           title="Create Survey"
           onChange={() => setIsOpen(false)}
         >
-          <CreateSurvey handleClose={() => setIsOpen(false)} />
+          <CreateSurvey handleClose={() => setIsOpen(false)} setRender={function (args: boolean): void {
+            throw new Error("Function not implemented.");
+          } } />
         </Modal></>
 
     </>

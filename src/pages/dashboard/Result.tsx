@@ -14,7 +14,7 @@ import { db } from "../../config/firebase";
 import PDFTemplate from "../../components/ui/PDFTemplate";
 
 const Result = () => {
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState([] as any[]);
   const [survey, setSurvey] = useState<Survey>();
   const [sections, setSections] = useState<string[]>();
   const [data, setData] = useState<any>(); // eslint-disable-line
@@ -27,13 +27,15 @@ const Result = () => {
   const resultId = pathname?.split("/")[4];
 
   useEffect(() => {
-    const uid = localStorage.getItem("uid")!;
-    const fetchData = async () => {
-      getSurveyById(surveyId, setSurvey);
-      //   getResults(uid, surveyId, setResults);
-    };
-    fetchData();
-    getAllResultData(uid, surveyId, setResults);
+    if (surveyId) {
+      const uid = localStorage.getItem("uid")!;
+      const fetchData = async () => {
+        getSurveyById(surveyId, setSurvey);
+        //   getResults(uid, surveyId, setResults);
+      };
+      fetchData();
+      getAllResultData(uid, surveyId, setResults);
+    }
   }, [surveyId]);
 
   useEffect(() => {
@@ -136,7 +138,7 @@ const Result = () => {
           elementId="recommendations"
           graphElementId="graphElement"
           chartElementId="ChartElement"
-          result={survey?.description}
+          result={survey?.description || ''}
           resultInfo={results.filter((item: any) => item.resultId == resultId)[0]}
           emailId={user?.email || ""}
         />

@@ -48,7 +48,7 @@ const SurveyCard = ({
     var indicator = 0;
     //@ts-ignore
     var count = survey.sections.forEach((section) => {
-      var questionCount = section.subsections.forEach((subsection) => {
+      var questionCount = section.subsections.forEach((subsection: any) => {
         var question = subsection.questions.length;
         indicator = indicator + question;
       });
@@ -64,7 +64,9 @@ const SurveyCard = ({
   }, [results, questions]);
 
   const handelClick = () => {
-    deleteSurvey(survey?.id, setRender);
+    if (setRender) {
+      deleteSurvey(survey?.id, setRender);
+    }
     setIsDeleteOpen(false);
   };
 
@@ -215,7 +217,7 @@ const SurveyCard = ({
             title="Edit Survey"
             onChange={() => setIsOpen(false)}
           >
-            <EditSurvey survey={survey} handleClose={() => setIsOpen(false)} />
+            <EditSurvey survey={survey} handleClose={() => setIsOpen(false)} setRender={undefined} />
           </Modal>
           <Modal
             isOpen={isDeleteOpen}

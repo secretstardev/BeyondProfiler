@@ -291,7 +291,7 @@ export const getAllResultData = async (
     const resultData = completedSurveysSnapshot.docs.map((doc) => doc.data());
     setResults(resultData);
     console.log(resultData, "<====resultData");
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error fetching completed surveys:", error.message);
     // Handle the error
     return [];
@@ -352,6 +352,7 @@ export const getFilteredRecommendationsData = async (
                 sectionTitle: sectionTitle,
                 recommendation: recommendationData?.from25to50,
                 percentage,
+                section: undefined,
               });
             } else if (
               percentage > 50 &&
@@ -364,6 +365,7 @@ export const getFilteredRecommendationsData = async (
                 sectionTitle: sectionTitle,
                 recommendation: recommendationData?.from50to75,
                 percentage,
+                section: undefined,
               });
             } else if (
               percentage > 75 &&
@@ -376,12 +378,13 @@ export const getFilteredRecommendationsData = async (
                 sectionTitle: sectionTitle,
                 recommendation: recommendationData?.from75to100,
                 percentage,
+                section: undefined,
               });
             }
           });
 
           if (sectionRecommendations.length === 0) {
-            const recommendation: RecommendationData = {
+            const recommendation: any = {
               surveyId: null,
               sectionId: sectionId,
               sectionTitle: sectionTitle,

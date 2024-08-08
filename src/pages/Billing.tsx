@@ -80,8 +80,8 @@ const BillingBox = ({ title, price }: BillingProp) => {
           <BuyButtonComponent
             buttonId="buy_btn_1OmvBLHMk6dSdO1wPJ1Xczbj"
             publishable_key="pk_test_51MyR7yHMk6dSdO1wlKzjSLGUKNvZODKUOY9gdFA0AWPIQ070CAU15FkaD2drkFa93xOjffJP2nfq8Kyr8bWSU3RH00qMrz1GUb"
-            clientRefId={ref_id}
-            customerEmail={email}
+            clientRefId={ref_id || ""}
+            customerEmail={email || ""}
           />
         </div>
       </div>

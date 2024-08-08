@@ -33,7 +33,7 @@ import { faCoffee, faCalendar } from '@fortawesome/free-solid-svg-icons'
 import { toast } from "react-toastify";
 
 const SurveyDetail = () => {
-  const [questions, setQuestions] = useState<Array<Question>>();
+  const [questions, setQuestions] = useState<Array<any>>();
   const [sections, setSections] =
     useState<Database["public"]["Tables"]["sections"]["Row"]>();
   const [render, setRender] = useState<boolean>(false);
@@ -70,6 +70,7 @@ const SurveyDetail = () => {
 
     setIsLoading(true);
     setRender(false);
+    if (!currentUrl) return;
     getSurveyById(currentUrl, setSurvey);
 
     const uid = localStorage.getItem("uid")!;
@@ -83,6 +84,7 @@ const SurveyDetail = () => {
     fetchData()
       .then(() => console.log("done"))
       .catch((err) => console.log("err", err));
+
   }, [currentUrl, survey?.id, render]);
 
   useEffect(() => {
@@ -261,7 +263,7 @@ const SurveyDetail = () => {
             </div>
             <div className="mt-5 ms-5 mb-10">
               <ul>
-                {sections?.map((val, index) => {
+                {sections && Object.keys(sections).map((val: any, index: any) => {
                   return (
                     <div key={index}>
                       <div className="py-[2px]">
@@ -332,7 +334,7 @@ const SurveyDetail = () => {
                                 )}
                               </div>
                             </div>
-                            {val?.subsections?.map((subsection) => {
+                            {val?.subsections?.map((subsection: any) => {
                               return (
                                 <div className="flex justify-between items-center">
                                   <Link
@@ -397,7 +399,7 @@ const SurveyDetail = () => {
                             <p className="text-primary my-4 -ms-4 text-lg capitalize font-normal">
                               {val?.title}
                             </p>
-                            {val?.subsections?.map((subsection) => {
+                            {val?.subsections?.map((subsection: any) => {
                               return (
                                 <li className="ms-7 list-item list-disc capitalize font-normal">
                                   {subsection?.title}
@@ -443,7 +445,7 @@ const SurveyDetail = () => {
           >
             <CreateSubSection
               surveyId={survey?.id || ""}
-              sectionId={sectionId}
+              sectionId={sectionId || ""}
               setIsOpen={setIsSubSectionCreateOpen}
               setRender={setRender}
             />
@@ -455,7 +457,7 @@ const SurveyDetail = () => {
           >
             <EditSubSection
               surveyId={survey?.id || ""}
-              sectionId={sectionId}
+              sectionId={sectionId || ""}
               setIsOpen={setIsSubSectionEditOpen}
               subsection={subSection}
               setRender={setRender}
@@ -493,8 +495,8 @@ const SurveyDetail = () => {
             onChange={() => setIsCreateRecoOpen(false)}
           >
             <CreateRecommendation
-              surveyId={survey?.id}
-              sectionId={sectionId}
+              surveyId={survey?.id || ""}
+              sectionId={sectionId || ""}
               setIsCreateOpen={setIsCreateRecoOpen}
               section={section!}
             />
@@ -506,8 +508,8 @@ const SurveyDetail = () => {
               onChange={() => setIsEditRecoOpen(false)}
             >
               <EditRecommendation
-                surveyId={survey?.id}
-                sectionId={sectionId}
+                surveyId={survey?.id || ""}
+                sectionId={sectionId || ""}
                 setIsOpen={setIsEditRecoOpen}
                 recommendation={recommendations}
               />

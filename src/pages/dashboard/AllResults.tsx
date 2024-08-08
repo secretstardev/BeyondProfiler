@@ -26,11 +26,15 @@ export default function AllResults() {
     const uid = localStorage.getItem("uid")!;
     const fetchData = async () => {
       console.log(surveyId);
-      getSurveyById(surveyId, setSurvey);
+      if (surveyId) {
+        getSurveyById(surveyId, setSurvey);
+      }
       //   getResults(uid, surveyId, setResults);
     };
     fetchData();
-    getAllResultData(uid, surveyId, setResults);
+    if (surveyId) {
+      getAllResultData(uid, surveyId, setResults);
+    }
   }, [surveyId]);
 
   useEffect(() => {

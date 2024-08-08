@@ -32,22 +32,26 @@ const SectionDetail = () => {
   useEffect(() => {
     setIsLoading(true);
     const fetchData = async () => {
-      await getSubsectionById(surveyId, sectionId, subsectionId, setSection);
-      getQuestionsBySubsectionId(
-        surveyId,
-        sectionId,
-        subsectionId,
-        setQuestions,
-        setIsLoading
-      );
-      setRender(false);
+      if (surveyId && sectionId && subsectionId) {
+        await getSubsectionById(surveyId, sectionId, subsectionId, setSection);
+        getQuestionsBySubsectionId(
+          surveyId,
+          sectionId,
+          subsectionId,
+          setQuestions,
+          setIsLoading
+        );
+        setRender(false);
+      }
     };
     fetchData();
   }, [surveyId, sectionId, subsectionId, render]);
 
   const handelClick = () => {
     if (!sectionId) return;
-    deleteQuestion(surveyId, sectionId, subsectionId, questionId!, setRender);
+    if (surveyId && sectionId && subsectionId) {
+      deleteQuestion(surveyId, sectionId, subsectionId, questionId!, setRender);
+    }
     setIsDeleteOpen(false);
     setQuestionId("");
   };
@@ -57,15 +61,15 @@ const SectionDetail = () => {
       {render ? (
         <div className="w-full min-h-[100vh] justify-center items-center flex">
 
-        <ClipLoader
-          color={"#3b82f6"}
-          loading={render}
-          // cssOverride={override}
-          size={50}
-          aria-label="Loading Spinner"
-          data-testid="loader"
+          <ClipLoader
+            color={"#3b82f6"}
+            loading={render}
+            // cssOverride={override}
+            size={50}
+            aria-label="Loading Spinner"
+            data-testid="loader"
           />
-          </div>
+        </div>
       ) : (
         <div className="mb-20">
           <Header heading="Dashboard" />
@@ -130,9 +134,9 @@ const SectionDetail = () => {
             onChange={() => setIsOpen(false)}
           >
             <CreateQuestion
-              surveyId={surveyId}
-              sectionId={sectionId}
-              subsectionId={subsectionId}
+              surveyId={surveyId || ''}
+              sectionId={sectionId || ''}
+              subsectionId={subsectionId || ''}
               setIsOpen={setIsOpen}
               setRender={setRender}
             />
@@ -143,9 +147,9 @@ const SectionDetail = () => {
             onChange={() => setIsEditOpen(false)}
           >
             <EditQuestion
-              surveyId={surveyId}
-              sectionId={sectionId}
-              subsectionId={subsectionId}
+              surveyId={surveyId || ''}
+              sectionId={sectionId || ''}
+              subsectionId={subsectionId || ''}
               setIsOpen={setIsEditOpen}
               question={question!}
               setRender={setRender}

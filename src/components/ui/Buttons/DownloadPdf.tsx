@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import Button from "../Button";
-import html2pdf from "html2pdf.js";
+// import html2pdf from "html2pdf.js";
 import emailJs from "@emailjs/browser";
 import toast from "react-hot-toast";
 import { PDFDownloadLink } from "@react-pdf/renderer";
-import { PdfDocument } from '@ironsoftware/ironpdf';
 import PDFTemplate from "../PDFTemplate";
 import jsPDF from 'jspdf';
 
@@ -29,19 +28,19 @@ const DownloadPdf: React.FC<Props> = ({
   const [downloadLoading, setDownloadLoading] = useState(false);
 
   const handleClick = async () => {
-    setDownloadLoading(true);
-    // html2pdf(document.getElementById("recommendations"));
+    // setDownloadLoading(true);
+    // // html2pdf(document.getElementById("recommendations"));
 
-    const doc = new jsPDF({
-      format: 'a4',
-      unit: 'px',
-    });
+    // const doc = new jsPDF({
+    //   format: 'a4',
+    //   unit: 'px',
+    // });
 
-    doc.html(document.getElementById(elementId), {
-      async callback(doc) {
-        await doc.save('document');
-      },
-    });
+    // doc.html(document.getElementById(elementId), {
+    //   async callback(doc) {
+    //     await doc.save('document');
+    //   },
+    // });
 
     // const container = document.createElement("div");
 
@@ -68,12 +67,12 @@ const DownloadPdf: React.FC<Props> = ({
 
     // html2pdf(container);
 
-    setDownloadLoading(false);
+    // setDownloadLoading(false);
   };
 
   const handleDownloadPDF = () => {
     // ReactPDF.render(<PDFTemplate />, `./example.pdf`);
-    html2pdf(<PDFTemplate />);
+    // html2pdf(<PDFTemplate />);
   }
 
   const handleSendEmail = () => {

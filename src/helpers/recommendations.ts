@@ -44,6 +44,7 @@ export const createRecommendation = async (
       from25to50: data.from25to50,
       from50to75: data.from50to75,
       from75to100: data.from75to100,
+      from0to25: data.from0to25,
     })
     .eq("id", section.id);
   if (!error) {

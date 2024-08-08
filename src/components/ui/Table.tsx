@@ -212,8 +212,7 @@ const Table = () => {
             <CreateRecommendation
               surveyId={surveyId}
               sectionId={sectionId}
-              setIsCreateOpen={setIsCreateOpen}
-            />
+              setIsCreateOpen={setIsCreateOpen} section={undefined} />
           </Modal>
           <Modal
             isOpen={isEditOpen}

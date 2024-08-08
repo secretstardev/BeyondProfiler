@@ -15,28 +15,29 @@ const QuestionPage = () => {
   const currentUrl = window.location.pathname.split("/")[3];
   const pathname = window.location.pathname;
   const surveyId = pathname?.split("/")[3];
-  const [survey, setSurvey] = useRecoilState(surveyState);
+  const [survey, setSurvey] = useRecoilState<any>(surveyState);
   const [surveyInfo, setSurveyInfo] = useState<Survey>();
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getQuestionsById(currentUrl);
+        if (currentUrl) {
+          const data = await getQuestionsById(currentUrl);
+          // Store all questions in an array
+          const allQuestions = data.reduce(
+            (acc: any, section: any) =>
+              acc.concat(section.subsections.flatMap((sub: any) => sub.questions)),
+            []
+          );
 
-        // Store all questions in an array
-        const allQuestions = data.reduce(
-          (acc, section) =>
-            acc.concat(section.subsections.flatMap((sub) => sub.questions)),
-          []
-        );
+          setSurvey({
+            surveyId: currentUrl,
+            sections: data,
+          });
+          // Set the questions in the state
+          setQuestions(allQuestions);
+        }
 
-        setSurvey({
-          surveyId: currentUrl,
-          sections: data,
-        });
-
-        // Set the questions in the state
-        setQuestions(allQuestions);
-      } catch (error) {
+      } catch (error: any) {
         console.error("Error setting survey data:", error.message);
       }
     };
@@ -48,7 +49,9 @@ const QuestionPage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      getSurveyById(surveyId, setSurveyInfo);
+      if (surveyId) {
+        getSurveyById(surveyId, setSurveyInfo);
+      }
       //   getResults(uid, surveyId, setResults);
     };
     fetchData();

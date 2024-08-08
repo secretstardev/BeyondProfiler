@@ -6,7 +6,7 @@ import { addResponse } from "../../../helpers/result";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Database } from "../../../Types/supabase";
-import { useRecoilState } from "recoil";
+import { atom, useRecoilState } from "recoil";
 import { surveyState } from "../../../recoil/recoil";
 import { resultState } from "../../../recoil/recoil";
 import { addDoc, collection } from "firebase/firestore";
@@ -14,6 +14,28 @@ import { db } from "../../../config/firebase";
 
 interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   questions: Database["public"]["Tables"]["questions"]["Row"][] | undefined;
+}
+
+interface SubSection {
+  id: any;
+
+  // other properties...
+}
+
+interface Section {
+  subsections?: SubSection[];
+  id: string;
+  title: any;
+  from75to100: any;
+  from50to75: any;
+  from25to50: any;
+
+  // other properties...
+}
+
+interface Survey {
+  sections?: Section[];
+  // other properties...
 }
 
 const QuestionForm: React.FC<Props> = ({ questions }) => {
@@ -28,7 +50,11 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [option, setOption] = useState<string>("");
   const [color, setColor] = useState("");
-  const [survey, setSurvey] = useRecoilState(surveyState);
+  const surveyState = atom<Survey | undefined>({
+    key: 'surveyState',
+    default: undefined,
+  });
+  const [survey, setSurvey] = useRecoilState<Survey | undefined>(surveyState);
   const [results, setResults] = useRecoilState(resultState);
   const [points, setPoints] = useState<number>(0);
   const [tempResult, setTempResult] = useState<
@@ -79,23 +105,23 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
       setProgress(100 * nextIndex / allQuestions.length)
       setIndex(nextIndex);
       setCurrentQuestion(allQuestions[nextIndex]);
-      if (tempResult.filter((item: any) => item.questionId == allQuestions[nextIndex].id).length != 0) {
-        let pt: any = tempResult.filter((item: any) => item.questionId == allQuestions[nextIndex].id)[0].points;
+      if (tempResult.filter((item: any) => item.questionId == allQuestions[nextIndex]?.id).length != 0) {
+        let pt: any = tempResult.filter((item: any) => item.questionId == allQuestions[nextIndex]?.id)[0]?.points;
         if (pt == 1) {
           setColor("a");
-          document.getElementById("radio1").click();
+          document.getElementById("radio1")?.click();
         }
         if (pt == 0.75) {
           setColor("b");
-          document.getElementById("radio2").click();
+          document.getElementById("radio2")?.click();
         }
         if (pt == 0.5) {
           setColor("c");
-          document.getElementById("radio3").click();
+          document.getElementById("radio3")?.click();
         }
         if (pt == 0.25) {
           setColor("d");
-          document.getElementById("radio4").click();
+          document.getElementById("radio4")?.click();
         }
       }
     } else {
@@ -106,20 +132,20 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
     const subsectionId = currentQuestion?.subsectionid;
     console.log("currentQuestion:\n", currentQuestion);
 
-    const sectionId = survey?.sections?.find((i) =>
-      i.subsections?.find((j) => j.id === subsectionId)
+    const sectionId = survey?.sections?.find((i: any) =>
+      i.subsections?.find((j: any) => j.id === subsectionId)
     )?.id;
-    const sectionname = survey?.sections?.find((i) =>
-      i.subsections?.find((j) => j.id === subsectionId)
+    const sectionname = survey?.sections?.find((i: any) =>
+      i.subsections?.find((j: any) => j.id === subsectionId)
     )?.title;
-    const sectionRecOne = survey?.sections?.find((i) =>
-      i.subsections?.find((j) => j.id === subsectionId)
+    const sectionRecOne = survey?.sections?.find((i: any) =>
+      i.subsections?.find((j: any) => j.id === subsectionId)
     )?.from75to100;
-    const sectionRecTwo = survey?.sections?.find((i) =>
-      i.subsections?.find((j) => j.id === subsectionId)
+    const sectionRecTwo = survey?.sections?.find((i: any) =>
+      i.subsections?.find((j: any) => j.id === subsectionId)
     )?.from50to75;
-    const sectionRecThree = survey?.sections?.find((i) =>
-      i.subsections?.find((j) => j.id === subsectionId)
+    const sectionRecThree = survey?.sections?.find((i: any) =>
+      i.subsections?.find((j: any) => j.id === subsectionId)
     )?.from25to50;
     const questionId = currentQuestion?.id;
     console.log("Points:\n", {
@@ -179,23 +205,23 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
       setIndex(nextIndex);
       setCurrentQuestion(allQuestions[nextIndex]);
 
-      if (tempResult.filter((item: any) => item.questionId == allQuestions[nextIndex].id).length != 0) {
-        let pt: any = tempResult.filter((item: any) => item.questionId == allQuestions[nextIndex].id)[0].points;
+      if (tempResult.filter((item: any) => item.questionId == allQuestions[nextIndex]?.id).length != 0) {
+        let pt: any = tempResult.filter((item: any) => item.questionId == allQuestions[nextIndex]?.id)[0]?.points;
         if (pt == 1) {
           setColor("a");
-          document.getElementById("radio1").click();
+          document.getElementById("radio1")?.click();
         }
         if (pt == 0.75) {
           setColor("b");
-          document.getElementById("radio2").click();
+          document.getElementById("radio2")?.click();
         }
         if (pt == 0.5) {
           setColor("c");
-          document.getElementById("radio3").click();
+          document.getElementById("radio3")?.click();
         }
         if (pt == 0.25) {
           setColor("d");
-          document.getElementById("radio4").click();
+          document.getElementById("radio4")?.click();
         }
       }
 
@@ -207,10 +233,10 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
 
   useEffect(() => {
     if (isOpen) {
-      const uniqueResults = tempResult.reduce((acc, current) => {
+      const uniqueResults = tempResult.reduce((acc: any, current: any) => {
         // Check if there is an existing result with the same sectionId
         const existingResultIndex = acc.findIndex(
-          (item) => item.sectionId === current.sectionId
+          (item: any) => item.sectionId === current.sectionId
         );
 
         if (existingResultIndex === -1) {
@@ -238,7 +264,7 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
           const existingSubsectionIndex = acc[
             existingResultIndex
           ].subsections.findIndex(
-            (item) => item.subsectionId === current.subsectionId
+            (item: any) => item.subsectionId === current.subsectionId
           );
 
           if (existingSubsectionIndex === -1) {
@@ -292,7 +318,7 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
     return milliSecondsSinceEpoch.toString(16);
   }
 
-  const calculateResults = async (uniqueResults) => {
+  const calculateResults = async (uniqueResults: any) => {
     // Initialize result object
     const resultObject = {
       resultId: generateIDbyDate(),
@@ -300,19 +326,19 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
       childname: localStorage.getItem("childname"),
       childbirthday: localStorage.getItem("birthday"),
       completedAt: getCurrentFormattedDate(),
-      scoreBySection: [],
-      recommendations: [],
+      scoreBySection: [] as any[],
+      recommendations: [] as any[],
     };
 
     // Function to calculate subsection total score
-    const calculateSubsectionTotal = (subsection) => {
-      return subsection.responses.reduce((acc, response) => acc + response.points, 0);
+    const calculateSubsectionTotal = (subsection: any) => {
+      return subsection.responses.reduce((acc: any, response: any) => acc + response.points, 0);
     };
 
     // Iterate through results
-    uniqueResults.forEach((result) => {
+    uniqueResults.forEach((result: any) => {
       // Calculate total score for the current section
-      const sectionTotalScore = result.subsections.reduce((acc, subsection) => {
+      const sectionTotalScore = result.subsections.reduce((acc: any, subsection: any) => {
         return acc + calculateSubsectionTotal(subsection) / subsection.responses.length;
       }, 0);
 
@@ -343,11 +369,15 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
     console.log(userId);
 
     try {
-      await addDoc(
-        collection(db, "users", userId, "completedSurveys"),
-        resultObject
-      );
-    } catch (error) {
+      if (userId) {
+        await addDoc(
+          collection(db, "users", userId, "completedSurveys"),
+          resultObject
+        );
+      } else {
+        // Handle null userId case here
+      }
+    } catch (error: any) {
       console.log("Error completedSurveys", error.message);
     }
   };
@@ -363,10 +393,10 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
   // calculateResults(uniqueResultsArray, "survey123", "user456");
 
   const getQuestionsFromSurvey = () => {
-    if (survey.sections) {
+    if (survey?.sections) {
       return survey.sections.reduce(
-        (acc, section) =>
-          acc.concat(section.subsections.flatMap((sub) => sub.questions)),
+        (acc: any, section: any) =>
+          acc.concat(section.subsections.flatMap((sub: any) => sub.questions)),
         []
       );
     }
@@ -395,7 +425,7 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
               className="hidden"
               id="radio1"
               onClick={() => {
-                setAnswer(currentQuestion?.option1);
+                setAnswer(currentQuestion?.option1 || "");
                 setOption("A");
                 setPoints(1);
               }}
@@ -426,7 +456,7 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
               className="hidden"
               id="radio2"
               onClick={() => {
-                setAnswer(currentQuestion?.option2);
+                setAnswer(currentQuestion?.option2 || "");
                 setOption("B");
                 setPoints(0.75);
               }}
@@ -457,7 +487,7 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
               className="hidden"
               id="radio3"
               onClick={() => {
-                setAnswer(currentQuestion?.option3);
+                setAnswer(currentQuestion?.option3 || "");
                 setOption("C");
                 setPoints(0.5);
               }}
@@ -488,7 +518,7 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
               className="hidden"
               id="radio4"
               onClick={() => {
-                setAnswer(currentQuestion?.option4);
+                setAnswer(currentQuestion?.option4 || "");
                 setOption("D");
                 setPoints(0.25);
               }}

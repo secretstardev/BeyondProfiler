@@ -34,7 +34,7 @@ const EditSurvey: React.FC<Props> = ({ handleClose, survey,setRender }) => {
       <h6 className="text-lg font-semibold mb-3">Title</h6>
       <Input
         placeholder="Enter email"
-        value={title}
+        value={title || ''}
         onChange={(e) => setTitle(e.target.value)}
         className="mb-7"
       />
@@ -49,7 +49,7 @@ const EditSurvey: React.FC<Props> = ({ handleClose, survey,setRender }) => {
       <select
         id="role"
         className="h-12 w-full mt-1 block px-3 py-2 border border-neutral-300 rounded-md text-sm placeholder-lightgray bg-white focus:outline-none focus:border-neutral-300 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none mb-7"
-        value={role}
+        value={role || ''}
         onChange={(e) => setRole(e.target.value)}
       >
         <option>Select Role</option>
@@ -62,7 +62,7 @@ const EditSurvey: React.FC<Props> = ({ handleClose, survey,setRender }) => {
           "h-12 w-full mt-1 mb-7 block px-3 py-2 border border-neutral-300 rounded-md text-sm placeholder-lightgray bg-white focus:outline-none focus:border-neutral-300 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"
         }
         placeholder="Enter description"
-        value={description}
+        value={description || ''}
         onChange={(e) => setDescription(e.target.value)}
       />
       <div className="flex justify-end">

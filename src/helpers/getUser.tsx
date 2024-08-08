@@ -5,19 +5,21 @@ import { doc, getFirestore, onSnapshot } from "firebase/firestore";
 function useGetUser() {
 
     const [user, setuser] = useState({} as User);
-    const db=getFirestore();
+    const db = getFirestore();
 
 
-    useEffect(()=>{
-        var uid=localStorage.getItem('uid');
-        onSnapshot(doc(db, "users", uid), (doc) => {
-            if (doc.exists()) {
-                setuser({ id:doc.id,...doc.data() } as User);
-            }
-        });
-    },[])
+    useEffect(() => {
+        var uid = localStorage.getItem('uid');
+        if (uid) {
+            onSnapshot(doc(db, "users", uid), (doc) => {
+                if (doc.exists()) {
+                    setuser({ id: doc.id, ...doc.data() } as User);
+                }
+            });
+        }
+    }, [])
 
-    return {user};
+    return { user };
 
 }
 

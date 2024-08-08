@@ -32,7 +32,18 @@ export const getQuestionsBySubsectionId = async (
     setIsLoading(false);
   } else {
     setIsLoading(false);
-    setQuestions(data);
+    const formattedData: any = data.map((question: any) => ({
+      id: question.id,
+      text: question.title || "",
+      options: [
+        question.option1 || "",
+        question.option2 || "",
+        question.option3 || "",
+        question.option4 || "",
+      ].filter((option) => option !== ""), // This will remove null options
+      subsectionid: question.subsectionid || 0,
+    }));
+    setQuestions(formattedData);
   }
 };
 

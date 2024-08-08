@@ -74,7 +74,8 @@ export const getSections = async (
   const { data, error } = await supabaseClient
     .from("sections")
     .select("*, subsections(*))")
-    .eq("surveyid", surveryId).order('id')
+    .eq("surveyid", surveryId)
+    .order("id");
 
   if (error) {
     toast.error(error.message);
@@ -85,21 +86,22 @@ export const getSections = async (
   }
 };
 export const getSectionById = async (
-  sectionId:string,
+  sectionId: string,
   // setSections: (data: Database["public"]["Tables"]["sections"]["Row"]
   setSection: (data: any) => void
 ) => {
   const { data, error } = await supabaseClient
     .from("sections")
     .select("*")
-    .eq("id", sectionId).single()
+    .eq("id", sectionId)
+    .single();
 
   if (error) {
     toast.error(error.message);
   } else {
     // toast.success("All Surveys fetched successfully");
     // console.log(data);
-    console.log("recommedation fetched",data)
+    console.log("recommedation fetched", data);
     setSection(data);
   }
 };
@@ -110,17 +112,17 @@ export const getSubsectionById = async (
   subsectionId: string,
   setSubsection: (data: any) => void // eslint-disable-line
 ) => {
- const { data, error } = await supabaseClient
+  const { data, error } = await supabaseClient
     .from("surveys")
     .select("*, sections(*,subsections(*))")
-    .eq("id", surveyId).single()
+    .eq("id", surveyId)
+    .single();
   if (error) {
     toast.error(error.message);
   } else {
     setSubsection(data);
   }
 };
-
 
 export const createSection = async (
   surveryId: string,
@@ -130,6 +132,7 @@ export const createSection = async (
   const { error, data } = await supabaseClient.from("sections").insert({
     title: title,
     surveyid: surveryId,
+    from0to25: null,
   });
   if (!error) {
     toast.success("Section created successfully");
@@ -144,14 +147,15 @@ export const createSection = async (
 export const updateSection = async (
   surveyId: string,
   sectionId: string,
-  updatedData: Database["public"]["Tables"]["sections"]["Update"],
+  title: string,
   setRender: (args: boolean) => void
 ) => {
   const { error } = await supabaseClient
     .from("sections")
     .update({
-      title: updatedData.title,
+      title: title,
       surveyid: surveyId,
+      from0to25: null,
     })
     .eq("id", sectionId);
   if (!error) {
@@ -162,7 +166,6 @@ export const updateSection = async (
     toast.error("Section did not Update, Something went wrong!");
   }
 };
-
 
 export const deleteSection = async (surveyId: string, sectionId: string) => {
   const { error } = await supabaseClient
@@ -176,7 +179,6 @@ export const deleteSection = async (surveyId: string, sectionId: string) => {
     toast.error("Section did not delete, Something went wrong!");
   }
 };
-
 
 export const createSubsection = async (
   sectionId: string,
@@ -206,9 +208,8 @@ export const updateSubsection = async (
   subsectionId: string,
   updatedData: any,
   setRender: (args: boolean) => void
-  
 ) => {
-  console.log("subsectionId",subsectionId,sectionId)
+  console.log("subsectionId", subsectionId, sectionId);
   const { error } = await supabaseClient
     .from("subsections")
     .update({
@@ -231,13 +232,13 @@ export const deleteSubsection = async (
   subsectionId: string
 ) => {
   const { error } = await supabaseClient
-  .from("subsections")
-  .delete()
-  .eq("id", subsectionId);
-if (!error) {
-  toast.success("SubSection deleted Successfully");
-} else {
-  console.log("error", error);
-  toast.error("SubSection did not delete, Something went wrong!");
-}
+    .from("subsections")
+    .delete()
+    .eq("id", subsectionId);
+  if (!error) {
+    toast.success("SubSection deleted Successfully");
+  } else {
+    console.log("error", error);
+    toast.error("SubSection did not delete, Something went wrong!");
+  }
 };
