@@ -134,7 +134,7 @@ const DownloadPdf: React.FC<Props> = ({
         document={
           <PDFTemplate result={result} resultInfo={resultInfo} chart={document.getElementById(chartElementId)} recommendation={document.getElementById(elementId)} />
         }
-        fileName={"file.pdf"}
+        fileName={"result.pdf"}
       >
         <Button
           className="bg-[#3C3C3C] text-md font-normal text-white w-[182px] h-[49px]"

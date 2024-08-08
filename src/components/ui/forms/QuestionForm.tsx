@@ -29,7 +29,7 @@ interface Section {
   from75to100: any;
   from50to75: any;
   from25to50: any;
-
+  from0to25: any;
   // other properties...
 }
 
@@ -67,6 +67,7 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
       sectionRecOne: string;
       sectionRecTwo: string;
       sectionRecThree: string;
+      sectionRecFour: string;
     }>
   >([]);
   const [resultId, setResultId] = useState("");
@@ -111,15 +112,15 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
           setColor("a");
           document.getElementById("radio1")?.click();
         }
-        if (pt == 0.75) {
+        if (pt == 0.7) {
           setColor("b");
           document.getElementById("radio2")?.click();
         }
-        if (pt == 0.5) {
+        if (pt == 0.4) {
           setColor("c");
           document.getElementById("radio3")?.click();
         }
-        if (pt == 0.25) {
+        if (pt == 0.1) {
           setColor("d");
           document.getElementById("radio4")?.click();
         }
@@ -147,6 +148,9 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
     const sectionRecThree = survey?.sections?.find((i: any) =>
       i.subsections?.find((j: any) => j.id === subsectionId)
     )?.from25to50;
+    const sectionRecFour = survey?.sections?.find((i: any) =>
+      i.subsections?.find((j: any) => j.id === subsectionId)
+    )?.from0to25;
     const questionId = currentQuestion?.id;
     console.log("Points:\n", {
       points,
@@ -157,6 +161,7 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
       sectionRecOne,
       sectionRecTwo,
       sectionRecThree,
+      sectionRecFour
     });
 
     if (tempResult.filter((item: any) => item.questionId == questionId).length == 0) {
@@ -171,6 +176,7 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
           sectionRecOne,
           sectionRecTwo,
           sectionRecThree,
+          sectionRecFour
         } as any,
       ]);
     }
@@ -186,6 +192,7 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
             sectionRecOne,
             sectionRecTwo,
             sectionRecThree,
+            sectionRecFour
           };
         }
         else {
@@ -211,15 +218,15 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
           setColor("a");
           document.getElementById("radio1")?.click();
         }
-        if (pt == 0.75) {
+        if (pt == 0.7) {
           setColor("b");
           document.getElementById("radio2")?.click();
         }
-        if (pt == 0.5) {
+        if (pt == 0.4) {
           setColor("c");
           document.getElementById("radio3")?.click();
         }
-        if (pt == 0.25) {
+        if (pt == 0.1) {
           setColor("d");
           document.getElementById("radio4")?.click();
         }
@@ -247,6 +254,7 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
             sectionRecOne: current.sectionRecOne,
             sectionRecTwo: current.sectionRecTwo,
             sectionRecThree: current.sectionRecThree,
+            sectionRecFour: current.sectionRecFour,
             subsections: [
               {
                 subsectionId: current.subsectionId,
@@ -357,7 +365,9 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
           ? result.sectionRecOne
           : proportionatePoints >= 50
             ? result.sectionRecTwo
-            : result.sectionRecThree;
+            : proportionatePoints >= 25
+              ? result.sectionRecThree
+              : result.sectionRecFour;
 
       resultObject.recommendations.push({
         section: result.sectionname,
@@ -458,7 +468,7 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
               onClick={() => {
                 setAnswer(currentQuestion?.option2 || "");
                 setOption("B");
-                setPoints(0.75);
+                setPoints(0.7);
               }}
               type="radio"
               name="radio"
@@ -489,7 +499,7 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
               onClick={() => {
                 setAnswer(currentQuestion?.option3 || "");
                 setOption("C");
-                setPoints(0.5);
+                setPoints(0.4);
               }}
               type="radio"
               name="radio"
@@ -520,7 +530,7 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
               onClick={() => {
                 setAnswer(currentQuestion?.option4 || "");
                 setOption("D");
-                setPoints(0.25);
+                setPoints(0.1);
               }}
               type="radio"
               name="radio"

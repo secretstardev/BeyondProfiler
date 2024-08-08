@@ -74,7 +74,7 @@ export default function AllResults() {
         <div className="flex justify-between mt-4">
           <p>Welcome User!</p>
         </div>
-        <div className="flex gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
           {!loading &&
             results?.map((result, index) => {
               return (
