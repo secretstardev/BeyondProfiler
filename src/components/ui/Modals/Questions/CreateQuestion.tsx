@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   surveyId: string;
   sectionId: string;
-  subsectionId:string;
+  subsectionId: string;
   setIsOpen: (args: boolean) => void;
   setRender: (args: boolean) => void;
 }
@@ -26,6 +26,7 @@ const CreateQuestion: React.FC<Props> = ({
   const [option3, setOption3] = useState<string>("");
   const [option4, setOption4] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
+  const [weight, setWeight] = useState<number>();
 
   const handelClick = () => {
     setIsLoading(true)
@@ -37,6 +38,7 @@ const CreateQuestion: React.FC<Props> = ({
         option3,
         option4,
       },
+      weight,
     };
     if (!text) {
       return toast.error("text cannot be empty");
@@ -48,8 +50,10 @@ const CreateQuestion: React.FC<Props> = ({
       return toast.error("option3 is not selected");
     } else if (!option4) {
       return toast.error("option4 is not selected");
+    } else if (!weight) {
+      return toast.error("weight is not selected");
     } else {
-      createQuestion(surveyId, sectionId,subsectionId, setIsOpen, setIsLoading, data!,setRender);
+      createQuestion(surveyId, sectionId, subsectionId, setIsOpen, setIsLoading, data!, setRender);
       setIsOpen(false);
     }
   };
@@ -95,6 +99,17 @@ const CreateQuestion: React.FC<Props> = ({
         onChange={(e) => setOption4(e.target.value)}
         className="mb-7"
       />
+      <h6 className="text-lg font-semibold mb-3">Weight of Question</h6>
+      <select
+        id="weight"
+        className="h-12 w-full mt-1 block px-3 py-2 border border-neutral-300 rounded-md text-sm placeholder-lightgray bg-white focus:outline-none focus:border-neutral-300 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none mb-7"
+        onChange={(e) => setWeight(parseFloat(e.target.value))}
+      >
+        <option selected>Select Weight</option>
+        <option value="0.5">Not important</option>
+        <option value="1">Normal</option>
+        <option value="1.5">Important</option>
+      </select>
       <div className="flex justify-end">
         <Button className="text-md h-10" onClick={handelClick}>
           {isLoading ? (

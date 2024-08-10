@@ -39,6 +39,7 @@ export const getQuestionsBySubsectionId = async (
       option2: question.option2 || "",
       option3: question.option3 || "",
       option4: question.option4 || "",
+      weight: question.weight,
       subsectionid: question.subsectionid || 0,
     }));
     setQuestions(formattedData);
@@ -52,6 +53,7 @@ export const editQuestion = async (
   questionId: string,
   questionData: any,
   optionsData: any,
+  weightData: any,
   setIsLoading: (args: boolean) => void,
   setRender: (args: boolean) => void
 ) => {
@@ -63,6 +65,7 @@ export const editQuestion = async (
       option2: optionsData.option2,
       option3: optionsData.option3,
       option4: optionsData.option4,
+      weight: weightData.weight,
       subsectionid: Number(subsectionId),
     })
     .eq("id", questionId);
@@ -94,6 +97,7 @@ export const createQuestion = async (
     option2: data.options.option2,
     option3: data.options.option3,
     option4: data.options.option4,
+    weight: data.weight,
   });
   if (!error) {
     toast.success("question created successfully");

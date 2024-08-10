@@ -2,13 +2,13 @@ import { Timestamp } from "firebase/firestore";
 import { ReactNode } from "react";
 
 export interface User {
-  id?:string;
+  id?: string;
   firstName: string;
   lastName: string;
   email: string;
   password: string;
   role: string;
-  package:"freemium"|"premium";
+  package: "freemium" | "premium";
 }
 
 export interface Survey {
@@ -55,6 +55,7 @@ export interface Question {
   subsectionId?: string;
   text: string;
   options: Options;
+  weight: number;
   timestamp?: Timestamp;
 }
 

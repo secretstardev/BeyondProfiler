@@ -18,6 +18,7 @@ export interface Database {
           option4: string | null;
           subsectionid: number | null;
           title: string | null;
+          weight: number | null;
         };
         Insert: {
           id?: string;
@@ -27,6 +28,7 @@ export interface Database {
           option4?: string | null;
           subsectionid?: number | null;
           title?: string | null;
+          weight?: number | null;
         };
         Update: {
           id?: string;
@@ -36,6 +38,7 @@ export interface Database {
           option4?: string | null;
           subsectionid?: number | null;
           title?: string | null;
+          weight?: number | null;
         };
         Relationships: [
           {

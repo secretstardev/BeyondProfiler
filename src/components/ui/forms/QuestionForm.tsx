@@ -152,6 +152,7 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
       i.subsections?.find((j: any) => j.id === subsectionId)
     )?.from0to25;
     const questionId = currentQuestion?.id;
+    const questionWeight = currentQuestion?.weight;
     console.log("Points:\n", {
       points,
       questionId,
@@ -161,7 +162,8 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
       sectionRecOne,
       sectionRecTwo,
       sectionRecThree,
-      sectionRecFour
+      sectionRecFour,
+      questionWeight
     });
 
     if (tempResult.filter((item: any) => item.questionId == questionId).length == 0) {
@@ -176,7 +178,8 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
           sectionRecOne,
           sectionRecTwo,
           sectionRecThree,
-          sectionRecFour
+          sectionRecFour,
+          questionWeight
         } as any,
       ]);
     }
@@ -192,7 +195,8 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
             sectionRecOne,
             sectionRecTwo,
             sectionRecThree,
-            sectionRecFour
+            sectionRecFour,
+            questionWeight
           };
         }
         else {
@@ -211,6 +215,7 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
     if (nextIndex >= 0) {
       setIndex(nextIndex);
       setCurrentQuestion(allQuestions[nextIndex]);
+      setProgress(100 * nextIndex / allQuestions.length)
 
       if (tempResult.filter((item: any) => item.questionId == allQuestions[nextIndex]?.id).length != 0) {
         let pt: any = tempResult.filter((item: any) => item.questionId == allQuestions[nextIndex]?.id)[0]?.points;
@@ -262,6 +267,7 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
                   {
                     questionId: current.questionId,
                     points: current.points,
+                    questionWeight: current.questionWeight,
                   },
                 ],
               },
@@ -283,6 +289,7 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
                 {
                   questionId: current.questionId,
                   points: current.points,
+                  questionWeight: current.questionWeight,
                 },
               ],
             });
@@ -293,12 +300,15 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
             ].responses.push({
               questionId: current.questionId,
               points: current.points,
+              questionWeight: current.questionWeight,
             });
           }
         }
 
         return acc;
       }, []);
+
+      console.log("uniqueResults:\n", uniqueResults)
 
       setResults({
         surveyId,
@@ -340,15 +350,20 @@ const QuestionForm: React.FC<Props> = ({ questions }) => {
 
     // Function to calculate subsection total score
     const calculateSubsectionTotal = (subsection: any) => {
-      return subsection.responses.reduce((acc: any, response: any) => acc + response.points, 0);
+      return subsection.responses.reduce((acc: any, response: any) => acc + response.points * response.questionWeight, 0);
+    };
+
+    const calculateSubsectionWeightTotal = (subsection: any) => {
+      return subsection.responses.reduce((acc: any, response: any) => acc + response.questionWeight, 0);
     };
 
     // Iterate through results
     uniqueResults.forEach((result: any) => {
       // Calculate total score for the current section
       const sectionTotalScore = result.subsections.reduce((acc: any, subsection: any) => {
-        return acc + calculateSubsectionTotal(subsection) / subsection.responses.length;
+        return acc + calculateSubsectionTotal(subsection) / calculateSubsectionWeightTotal(subsection);
       }, 0);
+
 
       // Calculate proportionate points for the section based on the total survey points
       const proportionatePoints = (sectionTotalScore / result.subsections.length) * 100;

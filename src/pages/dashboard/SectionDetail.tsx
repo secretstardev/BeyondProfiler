@@ -108,25 +108,30 @@ const SectionDetail = () => {
                         <li>{val?.option4}</li>
                       </ul>
                     </div>
-                    <div className="flex me-10">
-                      <Button
-                        className="bg-green-600 text-[16px] h-7 md:px-[6px] px-[6px]"
-                        onClick={() => {
-                          setIsEditOpen(true);
-                          setQuestion(val);
-                        }}
-                      >
-                        <MdEdit />
-                      </Button>
-                      <Button
-                        className="bg-red-600 ms-3 text-[16px] h-7 md:px-[6px] px-[6px]"
-                        onClick={() => {
-                          setIsDeleteOpen(true);
-                          setQuestionId(val.id);
-                        }}
-                      >
-                        <MdDelete />
-                      </Button>
+                    <div className="flex flex-col justify-between me-5 mb-5">
+                      <div className=" flex flex-row ps-8">
+                        <Button
+                          className="bg-green-600 text-[16px] h-7 md:px-[6px] px-[6px]"
+                          onClick={() => {
+                            setIsEditOpen(true);
+                            setQuestion(val);
+                          }}
+                        >
+                          <MdEdit />
+                        </Button>
+                        <Button
+                          className="bg-red-600 ms-3 text-[16px] h-7 md:px-[6px] px-[6px]"
+                          onClick={() => {
+                            setIsDeleteOpen(true);
+                            setQuestionId(val.id);
+                          }}
+                        >
+                          <MdDelete />
+                        </Button>
+                      </div>
+                      <div className=" min-w-[100px]">
+                        <p>Weight:{val?.weight == 0.5 ? " 50%" : val?.weight == 1 ? " 100%" : " 150%"}</p>
+                      </div>
                     </div>
                   </div>
                   <hr />
