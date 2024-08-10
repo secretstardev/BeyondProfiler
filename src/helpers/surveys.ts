@@ -21,7 +21,8 @@ export const getSurveys = async (
   const { data, error } = await supabaseClient
     .from("surveys")
     .select("*, sections(*,subsections(*,questions(*)))")
-    .eq("role", filter);
+    // .eq("role", filter);
+    .or(`role.eq.${filter}, role.eq.all`);
   if (error) {
     toast.error(error.message);
   } else {
@@ -41,8 +42,7 @@ export const getSurveys = async (
 
 export const getCompleteSurveys = async (
   userId: string,
-  setCompletedSurveys: (args: string[]) => void,
-  
+  setCompletedSurveys: (args: string[]) => void
 ) => {
   const completedSurveysRef = collection(
     db,

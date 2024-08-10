@@ -12,13 +12,18 @@ import { getResultsData } from "../../helpers/result";
 import { Database } from "../../Types/supabase";
 import useGetUser from "../../helpers/getUser";
 import { toast } from "react-toastify";
+import { BiDotsVertical, BiGroup, BiSolidGroup } from "react-icons/bi";
+import { supabaseClient } from "../../config/supabase";
+import { collection, getDocs, query } from "firebase/firestore";
 
 const SurveyCard = ({
   survey,
   setRender,
+  filter
 }: {
   survey: Database["public"]["Tables"]["surveys"]["Row"];
   setRender?: (args: boolean) => void;
+  filter?: string;
 }) => {
   const [role, setRole] = useState("");
   const [questions, setQuestions] =
@@ -30,6 +35,8 @@ const SurveyCard = ({
   const [loading, setIsLoading] = useState(false);
   const [numberOfQuestions, setnumberOfQuestions] = useState(0);
   const [completedSurveys, setCompletedSurvey] = useState<string[]>([]);
+  const [isDropDownOpen, setIsDropDownOpen] = useState<Boolean>(survey.role == "all" ? true : false);
+  const [originRole, setOriginRole] = useState<string>();
   const navigate = useNavigate();
   const { user } = useGetUser();
 
@@ -69,6 +76,25 @@ const SurveyCard = ({
     }
     setIsDeleteOpen(false);
   };
+
+  const handleShare = async (b: boolean) => {
+    console.log(survey);
+    console.log(filter);
+    console.log(b);
+    if (b) {
+      const { data, error } = await supabaseClient
+        .from("surveys")
+        .update({ role: "all" })
+        .eq('id', survey.id);
+      toast.success(`This survey shared with ${filter == "child" ? "employee role" : "child role"} successfully!`);
+    } else {
+      const { data, error } = await supabaseClient
+        .from("surveys")
+        .update({ role: filter })
+        .eq('id', survey.id);
+      toast.success(`This survey is used for only ${filter} role now!`);
+    }
+  }
 
 
 
@@ -191,7 +217,7 @@ const SurveyCard = ({
                 </p>
               )}
             </div>
-            <div className="flex justify-end mb-3">
+            <div className="w-full flex justify-between mb-3">
               <div className="flex">
                 <Button
                   className={`bg-white p-4 md:p-4 text-sm font-normal text-blue-600 w-[60px] h-[24px] whitespace-nowrap`}
@@ -210,6 +236,19 @@ const SurveyCard = ({
                   Delete
                 </Button>
               </div>
+              <button
+                onClick={() => {
+                  handleShare(!isDropDownOpen);
+                  setIsDropDownOpen(!isDropDownOpen);
+                }}
+                className="relative z-10 block p-2 text-gray-700  border border-transparent rounded-md focus:outline-none hover:bg-slate-100 hover:bg-transparent hover:text-gray-100"
+              >
+                {
+                  !isDropDownOpen ? <BiGroup /> : <BiSolidGroup />
+                }
+
+              </button>
+
             </div>
           </div>
           <Modal

@@ -54,7 +54,7 @@ const AdminDashboard = () => {
         {surveys?.map((survey, index) => {
           return (
             <div key={index}>
-              <SurveyCard survey={survey} setRender={setRender} />
+              <SurveyCard survey={survey} setRender={setRender} filter={filter} />
             </div>
           );
         })}
