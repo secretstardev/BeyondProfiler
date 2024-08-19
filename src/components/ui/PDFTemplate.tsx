@@ -181,12 +181,14 @@ export default function PDFTemplate(props: any) {
             recommendationObj && <>
               {
                 Array.from(document.getElementById("recommendations")!.children).map((item: any, index: any) => {
-                  return index == 0 ?
+                  return index == -1 ?
                     <View>
                       <Text key={index} style={{ padding: "12px", width: "100%", backgroundColor: "#2040B0", color: "#FFFFFF", marginTop: "12px" }}>
                         {(Array.from(item!.children)[1] as HTMLElement).innerHTML}
                       </Text>
-                      <Image source={attention1} style={styles.image} />
+                      <Text>
+                        <Image source={attention1} style={styles.image} />
+                      </Text>
                       {/* <Image source={attention2} style={styles.image2} /> */}
                       <Image source={attention3} style={styles.image} />
                     </View> :

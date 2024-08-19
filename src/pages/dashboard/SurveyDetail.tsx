@@ -60,6 +60,7 @@ const SurveyDetail = () => {
   const [birthday, setBirthday] = useState("")
   const [dateShow, setDateShow] = useState<boolean>(false)
   const [selectedDate, setSelectedDate] = useState<any>()
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -186,6 +187,11 @@ const SurveyDetail = () => {
     // if (localStorage.getItem("birthday"))
     //   setChildName(localStorage.getItem("birthday"));
   }, [])
+
+  const setProcessing = (b: boolean) => {
+    setIsProcessing(b);
+    console.log(b);
+  }
 
 
   return (
@@ -505,6 +511,7 @@ const SurveyDetail = () => {
               sectionId={sectionId || ""}
               setIsCreateOpen={setIsCreateRecoOpen}
               section={section!}
+              setProcess={setProcessing}
             />
           </Modal>
           {recommendations && (
@@ -523,6 +530,19 @@ const SurveyDetail = () => {
           )}
         </div>
       )}
+
+      {
+        isProcessing ? <div className=" fixed top-0 left-0 w-full min-h-[100vh] justify-center items-center flex bg-opacity-20 bg-gray-900 z-50">
+          <ClipLoader
+            color={"#3b82f6"}
+            loading={true}
+            // cssOverride={override}
+            size={50}
+            aria-label="Loading Spinner"
+            data-testid="loader"
+          />
+        </div> : <></>
+      }
     </>
   );
 };

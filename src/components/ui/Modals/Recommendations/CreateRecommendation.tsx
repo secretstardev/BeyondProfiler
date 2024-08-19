@@ -2,16 +2,21 @@ import React, { useEffect, useState } from "react";
 import Button from "../../Button";
 
 import { createRecommendation } from "../../../../helpers/recommendations";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
+// import ReactQuill from "react-quill";
+// import "react-quill/dist/quill.snow.css";
 import { toast } from "react-toastify";
 import { getSectionById } from "../../../../helpers/sections";
+import { useQuill } from 'react-quilljs';
+import 'quill/dist/quill.snow.css';
+import { ref, uploadBytesResumable, getDownloadURL, getStorage } from 'firebase/storage';
+import ClipLoader from "react-spinners/ClipLoader";
 
 interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   surveyId: string;
   sectionId: string;
   setIsCreateOpen: (args: boolean) => void;
   section: any;
+  setProcess: any;
 }
 
 const CreateRecommendation: React.FC<Props> = ({
@@ -19,13 +24,22 @@ const CreateRecommendation: React.FC<Props> = ({
   sectionId,
   setIsCreateOpen,
   section,
+  setProcess
 }) => {
+
+
+  const { quill: quill1, quillRef: quillRef1 } = useQuill();
+  const { quill: quill2, quillRef: quillRef2 } = useQuill();
+  const { quill: quill3, quillRef: quillRef3 } = useQuill();
+  const { quill: quill4, quillRef: quillRef4 } = useQuill();
+
   const [option1, setOption1] = useState<string>("");
   const [option2, setOption2] = useState<string>("");
   const [option3, setOption3] = useState<string>("");
   const [option4, setOption4] = useState<string>("");
   const [sectionDetails, setSectionDetails] = useState<any>();
   const [isLoading, setIsLoading] = useState(false);
+  const storage = getStorage();
   // console.log("section Id", sectionId);
 
   useEffect(() => {
@@ -39,15 +53,181 @@ const CreateRecommendation: React.FC<Props> = ({
     setOption4(sectionDetails?.from75to100 ?? "");
   }, [sectionDetails]);
 
-  const handelClick = () => {
+  useEffect(() => {
+    if (quill1) {
+      quill1.clipboard.dangerouslyPasteHTML(option1);
+    }
+  }, [quill1, option1])
+
+  useEffect(() => {
+    if (quill2) {
+      quill2.clipboard.dangerouslyPasteHTML(option2);
+    }
+  }, [quill2, option2])
+
+  useEffect(() => {
+    if (quill3) {
+      quill3.clipboard.dangerouslyPasteHTML(option3);
+    }
+  }, [quill3, option3])
+
+  useEffect(() => {
+    if (quill4) {
+      quill4.clipboard.dangerouslyPasteHTML(option4);
+    }
+  }, [quill4, option4])
+
+  const extractImgSrcs = (htmlText: string): string[] => {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlText, 'text/html');
+
+    // Select all <img> elements
+    const imgElements = doc.querySelectorAll('img');
+
+    // Extract the src attributes
+    const srcs: string[] = [];
+    imgElements.forEach((img) => {
+      const src = img.getAttribute('src');
+      if (src) {
+        srcs.push(src);
+      }
+    });
+
+    return srcs;
+  }
+
+  const base64ToBlob = (dataUrl: string): Blob => {
+    const [metadata, base64String] = dataUrl.split(',');
+    if (!metadata || !base64String) {
+      throw new Error('Invalid data URL');
+    }
+    const mimeType = metadata.match(/:(.*?);/)?.[1] || '';
+    const byteCharacters = atob(base64String);
+    const byteNumbers = Array.from({ length: byteCharacters.length }, (_, i) => byteCharacters.charCodeAt(i));
+    const byteArray = new Uint8Array(byteNumbers);
+    return new Blob([byteArray], { type: mimeType });
+  }
+
+  const handleUpload = (dataUrl: string): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const blob = base64ToBlob(dataUrl);
+      const storageRef = ref(storage, `images/${Date.now()}.png`);
+
+      const uploadTask = uploadBytesResumable(storageRef, blob);
+
+      uploadTask.on(
+        'state_changed',
+        (snapshot) => {
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log(`Upload is ${progress}% done`);
+        },
+        (error) => {
+          console.error('Error uploading image to Firebase storage:', error);
+          reject(error);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            console.log('File available at', downloadURL);
+            resolve(downloadURL);
+          });
+        }
+      );
+    });
+  };
+
+  const replaceSubstring = (str: string, startIndex: number, length: number, replacement: string): string => {
+    // Ensure the start index and length are valid
+    if (startIndex < 0 || startIndex >= str.length || length < 0) {
+      throw new Error("Invalid start index or length");
+    }
+
+    // Calculate the end index of the substring to be replaced
+    const endIndex = startIndex + length;
+
+    // Ensure end index does not exceed the string length
+    if (endIndex > str.length) {
+      throw new Error("Invalid length, exceeds string bounds");
+    }
+
+    // Slice the string into three parts: before, the substring to be replaced, and after
+    const before = str.slice(0, startIndex);
+    const after = str.slice(endIndex);
+
+    // Concatenate the parts with the replacement string
+    return before + replacement + after;
+  }
+
+  const handelClick = async () => {
+
+    setProcess(true);
+    let newHTMLText1 = "";
+    let newHTMLText2 = "";
+    let newHTMLText3 = "";
+    let newHTMLText4 = "";
+    if (quill1) {
+      const imgSources = extractImgSrcs(quill1.root.innerHTML);
+      newHTMLText1 = quill1.root.innerHTML.toString();
+      for (let i = 0; i < imgSources.length; i++) {
+        let src = imgSources[i];
+        if (src?.startsWith("data:image")) {
+          const downloadURL = await handleUpload(src);
+          const result = replaceSubstring(newHTMLText1, newHTMLText1.indexOf(src), src.length, downloadURL);
+          newHTMLText1 = result;
+        }
+      }
+      quill1.clipboard.dangerouslyPasteHTML(newHTMLText1);
+    }
+
+    if (quill2) {
+      const imgSources = extractImgSrcs(quill2.root.innerHTML);
+      newHTMLText2 = quill2.root.innerHTML.toString();
+      for (let i = 0; i < imgSources.length; i++) {
+        let src = imgSources[i];
+        if (src?.startsWith("data:image")) {
+          const downloadURL = await handleUpload(src);
+          const result = replaceSubstring(newHTMLText2, newHTMLText2.indexOf(src), src.length, downloadURL);
+          newHTMLText2 = result;
+        }
+      }
+      quill2.clipboard.dangerouslyPasteHTML(newHTMLText2);
+    }
+
+    if (quill3) {
+      const imgSources = extractImgSrcs(quill3.root.innerHTML);
+      newHTMLText3 = quill3.root.innerHTML.toString();
+      for (let i = 0; i < imgSources.length; i++) {
+        let src = imgSources[i];
+        if (src?.startsWith("data:image")) {
+          const downloadURL = await handleUpload(src);
+          const result = replaceSubstring(newHTMLText3, newHTMLText3.indexOf(src), src.length, downloadURL);
+          newHTMLText3 = result;
+        }
+      }
+      quill3.clipboard.dangerouslyPasteHTML(newHTMLText3);
+    }
+
+    if (quill4) {
+      const imgSources = extractImgSrcs(quill4.root.innerHTML);
+      newHTMLText4 = quill4.root.innerHTML.toString();
+      for (let i = 0; i < imgSources.length; i++) {
+        let src = imgSources[i];
+        if (src?.startsWith("data:image")) {
+          const downloadURL = await handleUpload(src);
+          const result = replaceSubstring(newHTMLText4, newHTMLText4.indexOf(src), src.length, downloadURL);
+          newHTMLText4 = result;
+        }
+      }
+      quill4.clipboard.dangerouslyPasteHTML(newHTMLText4);
+    }
+
     const recommendationData = {
-      from0to25: option1,
-      from25to50: option2,
-      from50to75: option3,
-      from75to100: option4,
+      from0to25: newHTMLText1,
+      from25to50: newHTMLText2,
+      from50to75: newHTMLText3,
+      from75to100: newHTMLText4,
     };
 
-    if (!option4 && !option3 && !option2) {
+    if (!newHTMLText1 && !newHTMLText2 && !newHTMLText3 && !newHTMLText4) {
       return toast.error("text field cannot be empty");
     } else {
       setIsLoading(true);
@@ -59,46 +239,32 @@ const CreateRecommendation: React.FC<Props> = ({
         setIsLoading
       );
     }
+    setProcess(false);
   };
 
   return (
     <div>
-      <h6 className="text-lg text-primary font-semibold mb-3">
+      <h6 className="text-lg text-primary font-semibold mt-2 mb-1">
         From 0% to 25% results
       </h6>
-      <ReactQuill
-        theme="snow"
-        value={option1}
-        onChange={(val) => setOption1(val)}
-        className="mb-7"
-      />
-      <h6 className="text-lg text-primary font-semibold mb-3">
+      <div ref={quillRef1} />
+
+      <h6 className="text-lg text-primary font-semibold mt-2 mb-1">
         From 26% to 50% results
       </h6>
-      <ReactQuill
-        theme="snow"
-        value={option2}
-        onChange={(val) => setOption2(val)}
-        className="mb-7"
-      />
-      <h6 className="text-lg text-primary font-semibold mb-3">
+      <div ref={quillRef2} />
+
+      <h6 className="text-lg text-primary font-semibold mt-2 mb-1">
         From 51% to 75% results
       </h6>
-      <ReactQuill
-        theme="snow"
-        value={option3}
-        onChange={(val) => setOption3(val)}
-        className="mb-7"
-      />
-      <h6 className="text-lg text-primary font-semibold mb-3">
+      <div ref={quillRef3} />
+
+      <h6 className="text-lg text-primary font-semibold mt-2 mb-1">
         From 76% to 100% results
       </h6>
-      <ReactQuill
-        theme="snow"
-        value={option4}
-        onChange={(val) => setOption4(val)}
-        className="mb-7"
-      />
+      <div ref={quillRef4} />
+
+
       <div className="flex justify-end">
         <Button className="text-md h-10" onClick={handelClick}>
           {isLoading ? (
