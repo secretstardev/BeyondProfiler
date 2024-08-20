@@ -68,6 +68,7 @@ export default function PDFTemplate(props: any) {
 
   const chartElement = document.getElementById("ChartElement");
   useEffect(() => {
+
   }, [])
 
   useEffect(() => {
@@ -76,7 +77,7 @@ export default function PDFTemplate(props: any) {
       html2canvas(chartElement).then((canvas) => {
         const image = canvas.toDataURL('image/png');
         setChartImage(image);
-        // console.log("image:\n", image);
+        // console.log("chartimage:\n", image);
       });
     }
 
@@ -91,6 +92,68 @@ export default function PDFTemplate(props: any) {
   const removeHtmlTags = (str: String) => {
     return str.replace(/<[^>]*>/g, '').replace("&nbsp;", "");
   }
+
+  const getSource = async (element: any) => {
+    console.log(element);
+    const canvas = await html2canvas(element);
+    const image = canvas.toDataURL('image/png');
+    // console.log("image:\n", image);
+    return image;
+  }
+
+  const getImageSource = (str: any) => {
+    let srcValue = "";
+    const htmlString = str.toString();
+
+    // Create a new DOMParser instance
+    const parser = new DOMParser();
+
+    // Parse the HTML string into a Document
+    const doc = parser.parseFromString(htmlString, 'text/html');
+
+    // Query the first <img> element
+    const imgElement = doc.querySelector('img');
+
+    if (imgElement && imgElement.getAttribute('src')) {
+      // Get the src attribute value of the <img> element
+      console.log("src:", imgElement.getAttribute('src'));
+
+      srcValue = imgElement.getAttribute('src') || "";
+    } else {
+      console.log('No img element found in the provided HTML string.');
+    }
+    console.log("srcvalue:\n", srcValue, encodeURIComponent(srcValue));
+    return srcValue;
+  }
+
+  const downloadImage = async (url: string, filename: string) => {
+    try {
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok.');
+      }
+
+      const blob = await response.blob();
+      const urlObject = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = urlObject;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(urlObject); // Clean up URL object
+    } catch (error) {
+      console.error('Error downloading the image:', error);
+    }
+  };
+
+  const handleDownload = (url: string) => {
+    const imageUrl = url; // Replace with your image URL
+    const filename = 'downloaded-image.png'; // Replace with your desired filename
+    downloadImage(imageUrl, filename);
+    return "";
+  };
 
   const getToday = () => {
     const dateObject = new Date();
@@ -175,70 +238,49 @@ export default function PDFTemplate(props: any) {
           </View>
         </View>
       </Page>
-      <Page size="A4" style={styles.textPage} wrap>
-        <View style={styles.section}>
+      {
+        recommendationObj && <>
           {
-            recommendationObj && <>
-              {
-                Array.from(document.getElementById("recommendations")!.children).map((item: any, index: any) => {
-                  return index == -1 ?
-                    <View>
-                      <Text key={index} style={{ padding: "12px", width: "100%", backgroundColor: "#2040B0", color: "#FFFFFF", marginTop: "12px" }}>
-                        {(Array.from(item!.children)[1] as HTMLElement).innerHTML}
-                      </Text>
-                      <Text>
-                        <Image source={attention1} style={styles.image} />
-                      </Text>
-                      {/* <Image source={attention2} style={styles.image2} /> */}
-                      <Image source={attention3} style={styles.image} />
-                    </View> :
-                    <View>
-                      <Text key={index} style={{ padding: "12px", width: "100%", backgroundColor: "#2040B0", color: "#FFFFFF", marginTop: "12px" }}>
-                        {(Array.from(item!.children)[1] as HTMLElement).innerHTML}
-                      </Text>
-                      {
-                        Array.from(
-                          (Array.from(item!.children || [])[2] as HTMLElement || { children: [] }).children[0]?.children || []
-                        ).map((sItem: any, index: any) => {
-                          return <>
-                            {
-                              Array.from(sItem!.children).length == 0 ?
-                                <Text style={{ fontSize: 10, color: "#444444", marginTop: "4px" }}>{removeHtmlTags(sItem.innerHTML.toString())}</Text> :
+            Array.from(document.getElementById("recommendations")!.children).map((item: any, index: any) => {
+              return <Page size="A4" style={styles.textPage} wrap>
+                <View style={styles.section}>
+                  <View>
+                    <Text key={index} style={{ padding: "12px", width: "100%", backgroundColor: "#2040B0", color: "#FFFFFF", marginTop: "12px" }}>
+                      {(Array.from(item!.children)[1] as HTMLElement).innerHTML}
+                    </Text>
+                    {
+                      Array.from(
+                        (Array.from(item!.children || [])[2] as HTMLElement || { children: [] }).children[0]?.children || []
+                      ).map((sItem: any, index: any) => {
+                        return <>
+                          {
+                            Array.from(sItem!.children).length == 0 ?
+                              <Text style={{ fontSize: 10, color: "#444444", marginTop: "4px" }}>{removeHtmlTags(sItem.innerHTML.toString())}</Text> :
+                              (Array.from(sItem!.children)[0] as HTMLElement).tagName == "IMG" ?
+                                <Image source={`https://images.weserv.nl/?url=${encodeURIComponent(getImageSource((Array.from(sItem!.children)[0] as HTMLElement).outerHTML))}`} style={{ marginTop: "16px", marginBottom: "16px" }} />
+                                :
                                 (Array.from(sItem!.children)[0] as HTMLElement).tagName == "STRONG" ?
                                   <Text style={{ fontSize: 12, color: "#000000", fontWeight: "bold", marginTop: "12px" }}>{removeHtmlTags(sItem.innerHTML.toString())}</Text> :
                                   (Array.from(sItem!.children)[0] as HTMLElement).tagName == "BR" ?
                                     <Text style={{ fontSize: 8, color: "#444444", }}>&nbsp;</Text> :
                                     <Text style={{ fontSize: 10, color: "#444444", marginTop: "4px" }}>{removeHtmlTags(sItem.innerHTML.toString())}</Text>
-                            }
-                          </>
-                        })
-                      }
-                      {/* {
-                        Array.from((Array.from(item!.children)[2] as HTMLElement).children[0].children).map((sItem: any, index: any) => {
-                          return <>
-                            {
-                              Array.from(sItem!.children).length == 0 ?
-                                <Text style={{ fontSize: 10, color: "#444444", marginTop: "4px" }}>{removeHtmlTags(sItem.innerHTML.toString())}</Text> :
-                                (Array.from(sItem!.children)[0] as HTMLElement).tagName == "STRONG" ?
-                                  <Text style={{ fontSize: 12, color: "#000000", fontWeight: "bold", marginTop: "12px" }}>{removeHtmlTags(sItem.innerHTML.toString())}</Text> :
-                                  (Array.from(sItem!.children)[0] as HTMLElement).tagName == "BR" ?
-                                    <Text style={{ fontSize: 8, color: "#444444", }}>&nbsp;</Text> :
-                                    <Text style={{ fontSize: 10, color: "#444444", marginTop: "4px" }}>{removeHtmlTags(sItem.innerHTML.toString())}</Text>
-                            }
-                          </>
-                        })
-                      } */}
-                      <Text style={{ fontSize: 20 }}>&nbsp;</Text>
-                    </View>
-                })
-              }
-            </>
+                          }
+                        </>
+                      })
+                    }
+                    <Text style={{ fontSize: 20 }}>&nbsp;</Text>
+                  </View>
+                </View>
+              </Page>
+            })
           }
-        </View>
-      </Page>
+        </>
+      }
       <Page size="A4" style={styles.page}>
         <Image source={lastImage} style={styles.image} />
       </Page>
     </Document>
   )
 }
+
+

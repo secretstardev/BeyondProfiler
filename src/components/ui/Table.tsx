@@ -41,6 +41,10 @@ const Table = () => {
     setRecommendations(filteredResults);
   };
 
+  const setProcessing = (b: boolean) => {
+    console.log(b);
+  }
+
   return (
     <div>
       <header className="px-5 py-4 border-b border-gray-100 flex justify-end">
@@ -212,7 +216,10 @@ const Table = () => {
             <CreateRecommendation
               surveyId={surveyId}
               sectionId={sectionId}
-              setIsCreateOpen={setIsCreateOpen} section={undefined} />
+              setIsCreateOpen={setIsCreateOpen}
+              section={undefined}
+              setProcess={setProcessing}
+            />
           </Modal>
           <Modal
             isOpen={isEditOpen}
