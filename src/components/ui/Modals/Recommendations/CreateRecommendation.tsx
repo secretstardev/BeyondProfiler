@@ -28,11 +28,10 @@ const CreateRecommendation: React.FC<Props> = ({
 }) => {
 
 
-  const { quill, quillRef } = useQuill();
-  // const { quill: quill1, quillRef: quillRef1 } = useQuill();
-  // const { quill: quill2, quillRef: quillRef2 } = useQuill();
-  // const { quill: quill3, quillRef: quillRef3 } = useQuill();
-  // const { quill: quill4, quillRef: quillRef4 } = useQuill();
+  const { quill: quill1, quillRef: quillRef1 } = useQuill();
+  const { quill: quill2, quillRef: quillRef2 } = useQuill();
+  const { quill: quill3, quillRef: quillRef3 } = useQuill();
+  const { quill: quill4, quillRef: quillRef4 } = useQuill();
 
   const [option1, setOption1] = useState<string>("");
   const [option2, setOption2] = useState<string>("");
@@ -54,29 +53,29 @@ const CreateRecommendation: React.FC<Props> = ({
     setOption4(sectionDetails?.from75to100 ?? "");
   }, [sectionDetails]);
 
-  // useEffect(() => {
-  //   if (quill1) {
-  //     quill1.clipboard.dangerouslyPasteHTML(option1);
-  //   }
-  // }, [quill1, option1])
+  useEffect(() => {
+    if (quill1) {
+      quill1.clipboard.dangerouslyPasteHTML(option1);
+    }
+  }, [quill1, option1])
 
-  // useEffect(() => {
-  //   if (quill2) {
-  //     quill2.clipboard.dangerouslyPasteHTML(option2);
-  //   }
-  // }, [quill2, option2])
+  useEffect(() => {
+    if (quill2) {
+      quill2.clipboard.dangerouslyPasteHTML(option2);
+    }
+  }, [quill2, option2])
 
-  // useEffect(() => {
-  //   if (quill3) {
-  //     quill3.clipboard.dangerouslyPasteHTML(option3);
-  //   }
-  // }, [quill3, option3])
+  useEffect(() => {
+    if (quill3) {
+      quill3.clipboard.dangerouslyPasteHTML(option3);
+    }
+  }, [quill3, option3])
 
-  // useEffect(() => {
-  //   if (quill4) {
-  //     quill4.clipboard.dangerouslyPasteHTML(option4);
-  //   }
-  // }, [quill4, option4])
+  useEffect(() => {
+    if (quill4) {
+      quill4.clipboard.dangerouslyPasteHTML(option4);
+    }
+  }, [quill4, option4])
 
   const extractImgSrcs = (htmlText: string): string[] => {
     const parser = new DOMParser();
@@ -160,7 +159,6 @@ const CreateRecommendation: React.FC<Props> = ({
 
   const handelClick = async () => {
 
-    /*
     setProcess(true);
     let newHTMLText1 = "";
     let newHTMLText2 = "";
@@ -242,7 +240,6 @@ const CreateRecommendation: React.FC<Props> = ({
       );
     }
     setProcess(false);
-    */
   };
 
   return (
@@ -250,8 +247,8 @@ const CreateRecommendation: React.FC<Props> = ({
       <h6 className="text-lg text-primary font-semibold mt-2 mb-1">
         From 0% to 25% results
       </h6>
-      <div ref={quillRef} />
-      {/* 
+      <div ref={quillRef1} />
+
       <h6 className="text-lg text-primary font-semibold mt-2 mb-1">
         From 26% to 50% results
       </h6>
@@ -265,7 +262,7 @@ const CreateRecommendation: React.FC<Props> = ({
       <h6 className="text-lg text-primary font-semibold mt-2 mb-1">
         From 76% to 100% results
       </h6>
-      <div ref={quillRef4} /> */}
+      <div ref={quillRef4} />
 
 
       <div className="flex justify-end">
