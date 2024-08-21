@@ -76,7 +76,6 @@ const SurveyDetail = () => {
 
     const uid = localStorage.getItem("uid")!;
     const fetchData = async () => {
-      console.log("currentURL: ", currentUrl);
       getResultsData(uid, survey!.id, setResults);
       getSections(currentUrl, setSections);
       setQuestions(await getQuestionsById(currentUrl));
@@ -90,7 +89,6 @@ const SurveyDetail = () => {
   }, [currentUrl, survey?.id, render]);
 
   useEffect(() => {
-    console.log("sections:\n", sections);
   }, [sections])
 
 
@@ -167,7 +165,6 @@ const SurveyDetail = () => {
   }
 
   const onStart = () => {
-    console.log(birthday, childName);
     if (birthday != "" && childName != "") {
       localStorage.setItem("childname", childName);
       localStorage.setItem("birthday", birthday);
@@ -190,7 +187,6 @@ const SurveyDetail = () => {
 
   const setProcessing = (b: boolean) => {
     setIsProcessing(b);
-    console.log(b);
   }
 
 

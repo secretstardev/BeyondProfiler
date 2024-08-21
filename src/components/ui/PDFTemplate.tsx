@@ -17,6 +17,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF'
   },
   textPage: {
+    flexDirection: 'column',
     paddingLeft: 20,
     paddingRight: 20,
     paddingTop: 30,
@@ -65,9 +66,19 @@ export default function PDFTemplate(props: any) {
 
   const [chartImage, setChartImage] = useState<any>();
   const [recommendationObj, setRecommendationObj] = useState<any>();
+  const [imgHeights, setImgHeights] = useState<any>(undefined);
 
   const chartElement = document.getElementById("ChartElement");
   useEffect(() => {
+
+    const func = async () => {
+      const imageUrl = 'https://firebasestorage.googleapis.com/v0/b/beyondprofiler.appspot.com/o/survey%20card.png?alt=media&token=474fefa0-0d55-4b95-af4a-621806816691'; // Replace with your image URL
+
+
+      console.log((await getImageDimensions(imageUrl)));
+    }
+
+    func();
 
   }, [])
 
@@ -93,14 +104,6 @@ export default function PDFTemplate(props: any) {
     return str.replace(/<[^>]*>/g, '').replace("&nbsp;", "");
   }
 
-  const getSource = async (element: any) => {
-    console.log(element);
-    const canvas = await html2canvas(element);
-    const image = canvas.toDataURL('image/png');
-    // console.log("image:\n", image);
-    return image;
-  }
-
   const getImageSource = (str: any) => {
     let srcValue = "";
     const htmlString = str.toString();
@@ -116,58 +119,51 @@ export default function PDFTemplate(props: any) {
 
     if (imgElement && imgElement.getAttribute('src')) {
       // Get the src attribute value of the <img> element
-      console.log("src:", imgElement.getAttribute('src'));
 
       srcValue = imgElement.getAttribute('src') || "";
     } else {
       console.log('No img element found in the provided HTML string.');
     }
-    console.log("srcvalue:\n", srcValue, encodeURIComponent(srcValue));
     return srcValue;
   }
 
-  const downloadImage = async (url: string, filename: string) => {
-    try {
-      const response = await fetch(url);
+  const getImageDimensions = (imageUrl: string): Promise<number> => {
+    return new Promise((resolve, reject) => {
+      const img = document.createElement("img");
+      img.src = imageUrl;
+      img.onload = () => {
+        resolve(img.height / img.width);
+      };
+      img.onerror = reject;
+    });
+  };
 
-      if (!response.ok) {
-        throw new Error('Network response was not ok.');
-      }
-
-      const blob = await response.blob();
-      const urlObject = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = urlObject;
-      link.download = filename;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(urlObject); // Clean up URL object
-    } catch (error) {
-      console.error('Error downloading the image:', error);
+  const setImageProperties = async () => {
+    const imgCnt = recommendationObj.getElementsByTagName('img').length;
+    let heights: any = {};
+    for (let i = 0; i < imgCnt; i++) {
+      const element = recommendationObj.getElementsByTagName('img')[i] as HTMLElement;
+      const elementSrc = getImageSource(element.outerHTML.toString());
+      const elementDimension = await getImageDimensions(elementSrc);
+      heights[elementSrc] = Math.min(Math.floor(elementDimension * 210 / 297 * 0.99 * 100), 85);
     }
-  };
-
-  const handleDownload = (url: string) => {
-    const imageUrl = url; // Replace with your image URL
-    const filename = 'downloaded-image.png'; // Replace with your desired filename
-    downloadImage(imageUrl, filename);
-    return "";
-  };
-
-  const getToday = () => {
-    const dateObject = new Date();
-    const year = dateObject.getFullYear();
-    const month = String(dateObject.getMonth() + 1).padStart(2, '0'); // Months are 0-index, so we need to add 1. Pad with 0 to make it always 2 digits
-    const day = String(dateObject.getDate()).padStart(2, '0'); //Pad with 0 to make it always 2 digits
-    return `${year}-${month}-${day}`;
+    console.log(heights);
+    setImgHeights(heights);
   }
+
+  useEffect(() => {
+    if (recommendationObj) {
+      // recommendationObj.addEventListener('load', recommendationObjOnLoadEvent);
+      const imgCnt = recommendationObj.getElementsByTagName('img').length
+      console.log("Image count:\n", imgCnt);
+      if (imgCnt > 0) {
+        setImageProperties();
+      }
+    }
+  }, [recommendationObj?.innerHTML.toString()])
 
   return (
     <Document>
-      {/* <Page size="A4" style={styles.page}>
-        <Image source={headingImage} style={styles.image} />
-      </Page> */}
       <Page size="A4" style={styles.page}>
         <View style={styles.section}>
           <Image source={headingImage} style={styles.image} />
@@ -181,14 +177,6 @@ export default function PDFTemplate(props: any) {
       <Page size="A4" style={styles.page}>
         <Image source={secondImage} style={styles.image} />
       </Page>
-      {/* <Page size="A4" style={styles.page}>
-        <View style={styles.section}>
-          <Image source={secondImage} style={styles.image} />
-          <View style={styles.centerContent}>
-            <Text style={styles.text}>(The information provided is intended for general informational purposes only. It is not a substitute for professional medical or psychological advice, diagnosis, or treatment. The results from this survey do not constitute a medical or psychological diagnosis. Always seek the advice of your physician or a qualified healthcare provider with any questions you may have regarding a medical or psychological condition. For the full terms and conditions, please visit our website  <Link style={{ color: "blue", textDecoration: "underline" }} src="http://www.beyondprofiler.com">http://www.beyondprofiler.com</Link>)</Text>
-          </View>
-        </View>
-      </Page> */}
       <Page size="A4" style={styles.page}>
         <View style={styles.section}>
           <Image source={thirdImage} style={styles.image} />
@@ -202,47 +190,54 @@ export default function PDFTemplate(props: any) {
           }}
           >
             <Text style={{ fontSize: 24, color: '#FAA942' }}>Results</Text>
-            <Text style={{ fontSize: 16, color: '#FAA942', marginTop: '16px' }}>
+            <Text style={{ fontSize: 12, color: '#FAA942', marginTop: '16px' }}>
               {props.result}
             </Text>
             <View style={{ paddingTop: "24px", paddingBottom: "24px", }}>
               <Image style={{ marginTop: "16px", marginBottom: "16px", padding: "1px", border: " 1px solid #97D1A5" }} source={chartImage} />
             </View>
             <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-              <View style={{ width: "30%", padding: "4px", backgroundColor: "white", border: " 1px solid #97D1A5" }}>
+              <View style={{ width: "22%", padding: "4px", backgroundColor: "white", border: " 1px solid #97D1A5" }}>
                 <Text style={{ fontSize: 10, fontWeight: "extrabold", textAlign: 'left' }}>
-                  <Text style={{ textDecoration: "underline" }}>29 and below</Text>  : Independent/Typically Independent
+                  <Text style={{ textDecoration: "underline" }}>24 and below</Text>  : Independent/Typically Independent
                 </Text>
                 <Text style={{ fontSize: 8, marginTop: "4px", textAlign: 'left' }}>
                   Your child is generally capable of performing certain tasks or activities on their own without requiring constant assistance.
                 </Text>
               </View>
-              <View style={{ width: "30%", padding: "4px", backgroundColor: "white", border: " 1px solid #97D1A5" }}>
+              <View style={{ width: "22%", padding: "4px", backgroundColor: "white", border: " 1px solid #97D1A5" }}>
                 <Text style={{ fontSize: 10, fontWeight: "extrabold", textAlign: 'left' }}>
-                  <Text style={{ textDecoration: "underline" }}>Between 30 and 69</Text> : Semi-Independent
+                  <Text style={{ textDecoration: "underline" }}>Between 25 and 50</Text> : Achieving Independence
+                </Text>
+                <Text style={{ fontSize: 8, marginTop: "4px", textAlign: 'left' }}>
+                  Your child is mostly capable of performing certain tasks or activities on their own and only requires minimal adult assistance.
+                </Text>
+              </View>
+              <View style={{ width: "22%", padding: "4px", backgroundColor: "white", border: " 1px solid #97D1A5" }}>
+                <Text style={{ fontSize: 10, fontWeight: "extrabold", textAlign: 'left' }}>
+                  <Text style={{ textDecoration: "underline" }}>Between 51 and 75</Text> : Semi-Independent
                 </Text>
                 <Text style={{ fontSize: 8, marginTop: "4px", textAlign: 'left' }}>
                   Your child can perform certain tasks or activities with some degree of independence but still needs guidance and instruction from an adult.
                 </Text>
               </View>
-              <View style={{ width: "30%", padding: "4px", backgroundColor: "white", border: " 1px solid #97D1A5" }}>
+              <View style={{ width: "22%", padding: "4px", backgroundColor: "white", border: " 1px solid #97D1A5" }}>
                 <Text style={{ fontSize: 10, fontWeight: "extrabold", textAlign: 'left' }}>
-                  <Text style={{ textDecoration: "underline" }}>70 and above</Text> : Not Yet Independent/Typically Dependent
+                  <Text style={{ textDecoration: "underline" }}>Between 76 and above</Text> : Not Yet Independent/Typically Dependent
                 </Text>
                 <Text style={{ fontSize: 8, marginTop: "4px", textAlign: 'left' }}>
                   Your child is not yet able to perform certain tasks or activities on their own and relies heavily on adult assistance.
                 </Text>
               </View>
-
             </View>
           </View>
         </View>
       </Page>
       {
-        recommendationObj && <>
+        (recommendationObj && imgHeights) && <>
           {
             Array.from(document.getElementById("recommendations")!.children).map((item: any, index: any) => {
-              return <Page size="A4" style={styles.textPage} wrap>
+              return <Page size="A4" style={styles.textPage} wrap key={index}>
                 <View style={styles.section}>
                   <View>
                     <Text key={index} style={{ padding: "12px", width: "100%", backgroundColor: "#2040B0", color: "#FFFFFF", marginTop: "12px" }}>
@@ -257,7 +252,9 @@ export default function PDFTemplate(props: any) {
                             Array.from(sItem!.children).length == 0 ?
                               <Text style={{ fontSize: 10, color: "#444444", marginTop: "4px" }}>{removeHtmlTags(sItem.innerHTML.toString())}</Text> :
                               (Array.from(sItem!.children)[0] as HTMLElement).tagName == "IMG" ?
-                                <Image source={`https://images.weserv.nl/?url=${encodeURIComponent(getImageSource((Array.from(sItem!.children)[0] as HTMLElement).outerHTML))}`} style={{ marginTop: "16px", marginBottom: "16px" }} />
+                                // <View style={{ width: "100%", height: `${imgHeights[getImageSource((Array.from(sItem!.children)[0] as HTMLElement).outerHTML)]}%` }}></View>
+                                <Image source={`https://images.weserv.nl/?url=${encodeURIComponent(getImageSource((Array.from(sItem!.children)[0] as HTMLElement).outerHTML))}`} style={{ marginBottom: 10, width: "100%", height: `${imgHeights[getImageSource((Array.from(sItem!.children)[0] as HTMLElement).outerHTML)] + 5}%` }} />
+
                                 :
                                 (Array.from(sItem!.children)[0] as HTMLElement).tagName == "STRONG" ?
                                   <Text style={{ fontSize: 12, color: "#000000", fontWeight: "bold", marginTop: "12px" }}>{removeHtmlTags(sItem.innerHTML.toString())}</Text> :
@@ -284,3 +281,8 @@ export default function PDFTemplate(props: any) {
 }
 
 
+/*
+
+
+
+*/

@@ -39,7 +39,6 @@ const Result = () => {
   }, [surveyId]);
 
   useEffect(() => {
-    console.log(survey);
   }, [survey])
 
 
@@ -60,7 +59,6 @@ const Result = () => {
   // }, [results, surveyId]);
 
   useEffect(() => {
-    console.log("results:", results);
     const result = results.filter((item: any) => item.resultId == resultId)[0]
     setSections(result?.recommendations?.map((val: any) => val.section));
     setData(

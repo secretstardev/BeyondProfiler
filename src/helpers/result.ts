@@ -290,7 +290,6 @@ export const getAllResultData = async (
     // Extract data from the documents
     const resultData = completedSurveysSnapshot.docs.map((doc) => doc.data());
     setResults(resultData);
-    console.log(resultData, "<====resultData");
   } catch (error: any) {
     console.error("Error fetching completed surveys:", error.message);
     // Handle the error
