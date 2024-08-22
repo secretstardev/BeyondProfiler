@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import PDFTemplate from "../PDFTemplate";
 import jsPDF from 'jspdf';
+import ClipLoader from "react-spinners/ClipLoader";
 
 interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   elementId: string;
@@ -26,49 +27,7 @@ const DownloadPdf: React.FC<Props> = ({
 }) => {
   const [loading, setLoading] = useState(false);
   const [downloadLoading, setDownloadLoading] = useState(false);
-
-  const handleClick = async () => {
-    // setDownloadLoading(true);
-    // // html2pdf(document.getElementById("recommendations"));
-
-    // const doc = new jsPDF({
-    //   format: 'a4',
-    //   unit: 'px',
-    // });
-
-    // doc.html(document.getElementById(elementId), {
-    //   async callback(doc) {
-    //     await doc.save('document');
-    //   },
-    // });
-
-    // const container = document.createElement("div");
-
-    // container.style.width = "100%";
-
-    // const graphElement = document.getElementById(graphElementId);
-    // if (graphElement) {
-    //   const clonedGraphElement = graphElement.cloneNode(true) as HTMLElement;
-    //   clonedGraphElement.style.padding = "20px";
-    //   container.appendChild(clonedGraphElement);
-    // }
-
-    // container.appendChild(document.createElement("div")).style.pageBreakBefore =
-    //   "always";
-
-    // const contentElement = document.getElementById(elementId);
-    // if (contentElement) {
-    //   const clonedContentElement = contentElement.cloneNode(
-    //     true
-    //   ) as HTMLElement;
-    //   clonedContentElement.style.padding = "30px 50px";
-    //   container.appendChild(clonedContentElement);
-    // }
-
-    // html2pdf(container);
-
-    // setDownloadLoading(false);
-  };
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleDownloadPDF = () => {
     // ReactPDF.render(<PDFTemplate />, `./example.pdf`);
@@ -106,6 +65,10 @@ const DownloadPdf: React.FC<Props> = ({
       });
   };
 
+  const setProgress = (b: boolean) => {
+    setIsLoading(b);
+  }
+
   return (
     <div className="flex justify-center items-center gap-x-3 z-50">
       <Button
@@ -115,24 +78,10 @@ const DownloadPdf: React.FC<Props> = ({
       >
         Send Email
       </Button>
-      {/* <Button
-        className="bg-[#3C3C3C] text-md font-normal text-white w-[182px] h-[49px]"
-        onClick={handleClick}
-        disabled={downloadLoading}
-      >
-        Download
-      </Button> */}
-      {/* <Button
-        className="bg-[#3C3C3C] text-md font-normal text-white w-[182px] h-[49px]"
-        onClick={handleDownloadPDF}
-        disabled={downloadLoading}
-      >
-        Download
-      </Button> */}
 
       <PDFDownloadLink
         document={
-          <PDFTemplate result={result} resultInfo={resultInfo} chart={document.getElementById(chartElementId)} recommendation={document.getElementById(elementId)} />
+          <PDFTemplate result={result} resultInfo={resultInfo} chart={document.getElementById(chartElementId)} recommendation={document.getElementById(elementId)} setProgress={setProgress} />
         }
         fileName={"result.pdf"}
       >
@@ -144,6 +93,18 @@ const DownloadPdf: React.FC<Props> = ({
           Download
         </Button>
       </PDFDownloadLink>
+      {
+        isLoading ? <div className=" fixed top-0 left-0 w-full min-h-[100vh] justify-center items-center flex bg-opacity-20 bg-gray-900 z-50">
+          <ClipLoader
+            color={"#3b82f6"}
+            loading={true}
+            // cssOverride={override}
+            size={50}
+            aria-label="Loading Spinner"
+            data-testid="loader"
+          />
+        </div> : <></>
+      }
     </div>
   );
 };

@@ -149,10 +149,11 @@ export default function PDFTemplate(props: any) {
     }
     console.log(heights);
     setImgHeights(heights);
+    props.setProgress(false);
   }
 
   useEffect(() => {
-    if (recommendationObj) {
+    if (recommendationObj && recommendationObj.innerHTML) {
       // recommendationObj.addEventListener('load', recommendationObjOnLoadEvent);
       const imgCnt = recommendationObj.getElementsByTagName('img').length
       console.log("Image count:\n", imgCnt);
@@ -234,7 +235,54 @@ export default function PDFTemplate(props: any) {
         </View>
       </Page>
       {
-        (recommendationObj && imgHeights) && <>
+        (recommendationObj) && <>
+          {
+            Array.from(document.getElementById("recommendations")!.children).map((item: any, index: any) => {
+              return <Page size="A4" style={styles.textPage} wrap key={index}>
+                <Text key={index} style={{ padding: "12px", width: "100%", backgroundColor: "#2040B0", color: "#FFFFFF", marginTop: "12px" }}>
+                  {(Array.from(item!.children)[1] as HTMLElement).innerHTML}
+                </Text>
+                {
+                  Array.from(
+                    (Array.from(item!.children || [])[2] as HTMLElement || { children: [] }).children[0]?.children || []
+                  ).map((sItem: any, index: any) => {
+                    return <>
+                      {
+                        Array.from(sItem!.children).length == 0 ?
+                          <Text style={{ fontSize: 10, color: "#444444", marginTop: "4px" }}>{removeHtmlTags(sItem.innerHTML.toString())}</Text> :
+                          (Array.from(sItem!.children)[0] as HTMLElement).tagName == "IMG" ?
+                            // <View style={{ width: "100%", height: `${imgHeights[getImageSource((Array.from(sItem!.children)[0] as HTMLElement).outerHTML)]}%` }}></View>
+                            imgHeights && <Image source={`https://images.weserv.nl/?url=${encodeURIComponent(getImageSource((Array.from(sItem!.children)[0] as HTMLElement).outerHTML))}`} style={{ marginBottom: 10, width: "100%", height: `${imgHeights[getImageSource((Array.from(sItem!.children)[0] as HTMLElement).outerHTML)] + 5}%` }} />
+
+                            :
+                            (Array.from(sItem!.children)[0] as HTMLElement).tagName == "STRONG" ?
+                              <Text style={{ fontSize: 12, color: "#000000", fontWeight: "bold", marginTop: "12px" }}>{removeHtmlTags(sItem.innerHTML.toString())}</Text> :
+                              (Array.from(sItem!.children)[0] as HTMLElement).tagName == "BR" ?
+                                <Text style={{ fontSize: 8, color: "#444444", }}>&nbsp;</Text> :
+                                <Text style={{ fontSize: 10, color: "#444444", marginTop: "4px" }}>{removeHtmlTags(sItem.innerHTML.toString())}</Text>
+                      }
+                    </>
+                  })
+                }
+                <Text style={{ fontSize: 20 }}>&nbsp;</Text>
+              </Page>
+            })
+          }
+        </>
+      }
+      <Page size="A4" style={styles.page}>
+        <Image source={lastImage} style={styles.image} />
+      </Page>
+    </Document>
+  )
+}
+
+
+/*
+
+
+{
+        (recommendationObj) && <>
           {
             Array.from(document.getElementById("recommendations")!.children).map((item: any, index: any) => {
               return <Page size="A4" style={styles.textPage} wrap key={index}>
@@ -253,7 +301,7 @@ export default function PDFTemplate(props: any) {
                               <Text style={{ fontSize: 10, color: "#444444", marginTop: "4px" }}>{removeHtmlTags(sItem.innerHTML.toString())}</Text> :
                               (Array.from(sItem!.children)[0] as HTMLElement).tagName == "IMG" ?
                                 // <View style={{ width: "100%", height: `${imgHeights[getImageSource((Array.from(sItem!.children)[0] as HTMLElement).outerHTML)]}%` }}></View>
-                                <Image source={`https://images.weserv.nl/?url=${encodeURIComponent(getImageSource((Array.from(sItem!.children)[0] as HTMLElement).outerHTML))}`} style={{ marginBottom: 10, width: "100%", height: `${imgHeights[getImageSource((Array.from(sItem!.children)[0] as HTMLElement).outerHTML)] + 5}%` }} />
+                                imgHeights && <Image source={`https://images.weserv.nl/?url=${encodeURIComponent(getImageSource((Array.from(sItem!.children)[0] as HTMLElement).outerHTML))}`} style={{ marginBottom: 10, width: "100%", height: `${imgHeights[getImageSource((Array.from(sItem!.children)[0] as HTMLElement).outerHTML)] + 5}%` }} />
 
                                 :
                                 (Array.from(sItem!.children)[0] as HTMLElement).tagName == "STRONG" ?
@@ -273,16 +321,4 @@ export default function PDFTemplate(props: any) {
           }
         </>
       }
-      <Page size="A4" style={styles.page}>
-        <Image source={lastImage} style={styles.image} />
-      </Page>
-    </Document>
-  )
-}
-
-
-/*
-
-
-
 */
