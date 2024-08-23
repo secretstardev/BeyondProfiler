@@ -49,16 +49,18 @@ const Chart: React.FC<Props2> = ({ sections, data }) => {
   }, [sections, data]);
 
   return (
-    <div className="flex justify-center items-center w-[800px] h-[560px]">
-      {sections?.length > 0 && data?.length > 0 && (
-        <ReactApexChart
-          options={chartData?.options}
-          series={chartData?.series}
-          type="radar"
-          width={800}
-          height={640}
-        />
-      )}
+    <div id="ChartElement2">
+      <div className="flex justify-center items-center mt-20 pt-10 w-[800px] h-[560px]">
+        {sections?.length > 0 && data?.length > 0 && (
+          <ReactApexChart
+            options={chartData?.options}
+            series={chartData?.series}
+            type="radar"
+            width={800}
+            height={640}
+          />
+        )}
+      </div>
     </div>
   );
 };

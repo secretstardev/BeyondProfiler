@@ -6,6 +6,7 @@ import { auth, db } from '../../config/firebase';
 import headingImage from '../../../public/assets/pdfimages/1.png'
 import secondImage from '../../../public/assets/pdfimages/2n.jpg'
 import thirdImage from '../../../public/assets/pdfimages/3.png'
+import resultPageImage from '../../../public/assets/pdfimages/resultbgimage.jpg'
 import lastImage from '../../../public/assets/pdfimages/last.png'
 import attention1 from '../../../public/assets/pdfimages/attention1.png'
 import attention2 from '../../../public/assets/pdfimages/attention2.png'
@@ -68,7 +69,7 @@ export default function PDFTemplate(props: any) {
   const [recommendationObj, setRecommendationObj] = useState<any>();
   const [imgHeights, setImgHeights] = useState<any>(undefined);
 
-  const chartElement = document.getElementById("ChartElement");
+  const chartElement = document.getElementById("ChartElement2");
   useEffect(() => {
 
     const func = async () => {
@@ -180,25 +181,21 @@ export default function PDFTemplate(props: any) {
       </Page>
       <Page size="A4" style={styles.page}>
         <View style={styles.section}>
-          <Image source={thirdImage} style={styles.image} />
+          <Image source={resultPageImage} style={styles.image} />
           <View style={{
             position: 'absolute',
             left: '5%',
-            top: '8%',
+            top: '20%',
             // transform: 'translate(0%, -50%)',
             textAlign: 'center',
             width: '90%'
           }}
           >
-            <Text style={{ fontSize: 24, color: '#FAA942' }}>Results</Text>
-            <Text style={{ fontSize: 12, color: '#FAA942', marginTop: '16px' }}>
-              {props.result}
-            </Text>
-            <View style={{ paddingTop: "24px", paddingBottom: "24px", }}>
-              <Image style={{ marginTop: "16px", marginBottom: "16px", padding: "1px", border: " 1px solid #97D1A5" }} source={chartImage} />
+            <View style={{ paddingTop: "4px" }}>
+              <Image style={{ marginTop: "4px", marginBottom: "4px", padding: "1px" }} source={chartImage} />
             </View>
             <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-              <View style={{ width: "22%", padding: "4px", backgroundColor: "white", border: " 1px solid #97D1A5" }}>
+              <View style={{ width: "23%", padding: "4px", backgroundColor: "white", border: " 1px solid #97D1A5" }}>
                 <Text style={{ fontSize: 10, fontWeight: "extrabold", textAlign: 'left' }}>
                   <Text style={{ textDecoration: "underline" }}>24 and below</Text>  : Independent/Typically Independent
                 </Text>
@@ -206,7 +203,7 @@ export default function PDFTemplate(props: any) {
                   Your child is generally capable of performing certain tasks or activities on their own without requiring constant assistance.
                 </Text>
               </View>
-              <View style={{ width: "22%", padding: "4px", backgroundColor: "white", border: " 1px solid #97D1A5" }}>
+              <View style={{ width: "23%", padding: "4px", backgroundColor: "white", border: " 1px solid #97D1A5" }}>
                 <Text style={{ fontSize: 10, fontWeight: "extrabold", textAlign: 'left' }}>
                   <Text style={{ textDecoration: "underline" }}>Between 25 and 50</Text> : Achieving Independence
                 </Text>
@@ -214,7 +211,7 @@ export default function PDFTemplate(props: any) {
                   Your child is mostly capable of performing certain tasks or activities on their own and only requires minimal adult assistance.
                 </Text>
               </View>
-              <View style={{ width: "22%", padding: "4px", backgroundColor: "white", border: " 1px solid #97D1A5" }}>
+              <View style={{ width: "23%", padding: "4px", backgroundColor: "white", border: " 1px solid #97D1A5" }}>
                 <Text style={{ fontSize: 10, fontWeight: "extrabold", textAlign: 'left' }}>
                   <Text style={{ textDecoration: "underline" }}>Between 51 and 75</Text> : Semi-Independent
                 </Text>
@@ -222,7 +219,7 @@ export default function PDFTemplate(props: any) {
                   Your child can perform certain tasks or activities with some degree of independence but still needs guidance and instruction from an adult.
                 </Text>
               </View>
-              <View style={{ width: "22%", padding: "4px", backgroundColor: "white", border: " 1px solid #97D1A5" }}>
+              <View style={{ width: "23%", padding: "4px", backgroundColor: "white", border: " 1px solid #97D1A5" }}>
                 <Text style={{ fontSize: 10, fontWeight: "extrabold", textAlign: 'left' }}>
                   <Text style={{ textDecoration: "underline" }}>Between 76 and above</Text> : Not Yet Independent/Typically Dependent
                 </Text>
