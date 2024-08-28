@@ -116,18 +116,21 @@ export interface Database {
       };
       surveys: {
         Row: {
+          price?: number;
           description: string | null;
           id: string;
           role: string | null;
           title: string | null;
         };
         Insert: {
+          price?: number;
           description?: string | null;
           id?: string;
           role?: string | null;
           title?: string | null;
         };
         Update: {
+          price?: number;
           description?: string | null;
           id?: string;
           role?: string | null;

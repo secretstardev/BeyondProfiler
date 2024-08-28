@@ -26,7 +26,7 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     if (!filter) return;
-    console.log("render",render)
+    console.log("render", render)
     const fetchData = async () => {
       await getSurveys(filter, setSurveys).finally(() => {
         setRender(false);
@@ -50,7 +50,7 @@ const AdminDashboard = () => {
           </Button>
         </div>
       </div>
-      <div className="flex gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
         {surveys?.map((survey, index) => {
           return (
             <div key={index}>

@@ -83,6 +83,7 @@ export const createSurvey = async (
     title: newSurveyData.title,
     description: newSurveyData.description,
     role: newSurveyData.role,
+    price: newSurveyData.price
   });
   if (!error) {
     toast.success("Survey created successfully");

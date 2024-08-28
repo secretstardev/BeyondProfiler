@@ -14,6 +14,7 @@ const CreateSurvey: React.FC<Props> = ({ handleClose, setRender }) => {
   const [tagline, setTagline] = useState<string>();
   const [description, setDescription] = useState<string>();
   const [role, setRole] = useState<string>();
+  const [price, setPrice] = useState<number>();
 
   const handelClick = () => {
     const data = {
@@ -21,6 +22,7 @@ const CreateSurvey: React.FC<Props> = ({ handleClose, setRender }) => {
       tagline,
       description,
       role,
+      price,
       status: "pending",
     };
     if (!title) {
@@ -71,6 +73,14 @@ const CreateSurvey: React.FC<Props> = ({ handleClose, setRender }) => {
         placeholder="Enter description"
         value={description}
         onChange={(e) => setDescription(e.target.value)}
+      />
+      <h6 className="text-lg font-semibold mb-3">Price(USD)</h6>
+      <Input
+        placeholder="Enter price"
+        type="number"
+        value={price}
+        onChange={(e) => setPrice(Number(e.target.value))}
+        className="mb-7"
       />
       <div className="flex justify-end">
         <Button className="text-md h-10" onClick={handelClick}>

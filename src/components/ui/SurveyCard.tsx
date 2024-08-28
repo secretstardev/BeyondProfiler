@@ -131,35 +131,40 @@ const SurveyCard = ({
               )}
 
             </div>
-            <div className="flex justify-end mb-3">
-              {completedSurveys && completedSurveys.includes(survey?.id) ? (
-                <Button
-                  className={`bg-white text-sm font-normal  p-4 whitespace-nowrap ${results?.length == numberOfQuestions
-                    ? "text-blue-600"
-                    : "text-blue-600"
-                    } w-[104px] h-[24px]`}
-                  // onClick={() => navigate(`/dashboard/result/${survey.id}`)}
-                  onClick={() => navigate(`/dashboard/results/${survey.id}`)}
-                >
-                  Results
-                </Button>
-              ) : (
-                <Button
-                  className={`bg-white text-sm p-4 whitespace-nowrap font-regular ${results?.length == numberOfQuestions
-                    ? "text-blue-600"
-                    : "text-blue-600"
-                    } w-[104px] h-[24px]`}
-                  onClick={() => {
-                    if (user.package == "freemium") {
-                      toast.error("Please Subscribe to the Premium Package to get access to surveys")
-                    } else {
-                      navigate(`/dashboard/question/${survey.id}`)
-                    }
-                  }}
-                >
-                  Start
-                </Button>
-              )}
+            <div className="flex flex-row w-full justify-between mb-3">
+              <div className=" justify-end ">
+                {completedSurveys && completedSurveys.includes(survey?.id) ? (
+                  <Button
+                    className={`bg-white text-sm font-normal  p-4 whitespace-nowrap ${results?.length == numberOfQuestions
+                      ? "text-blue-600"
+                      : "text-blue-600"
+                      } w-[104px] h-[24px]`}
+                    // onClick={() => navigate(`/dashboard/result/${survey.id}`)}
+                    onClick={() => navigate(`/dashboard/results/${survey.id}`)}
+                  >
+                    Results
+                  </Button>
+                ) : (
+                  <Button
+                    className={`bg-white text-sm p-4 whitespace-nowrap font-regular ${results?.length == numberOfQuestions
+                      ? "text-blue-600"
+                      : "text-blue-600"
+                      } w-[104px] h-[24px]`}
+                    onClick={() => {
+                      if (user.package == "freemium") {
+                        toast.error("Please Subscribe to the Premium Package to get access to surveys")
+                      } else {
+                        navigate(`/dashboard/question/${survey.id}`)
+                      }
+                    }}
+                  >
+                    Start
+                  </Button>
+                )}
+              </div>
+              <div>
+                <p className=" text-[20px]">${survey?.price}</p>
+              </div>
             </div>
             <Modal
               isOpen={isOpen}
