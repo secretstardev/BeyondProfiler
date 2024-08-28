@@ -1,19 +1,43 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * import {onCall} from "firebase-functions/v2/https";
- * import {onDocumentWritten} from "firebase-functions/v2/firestore";
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
+import * as functions from "firebase-functions";
+import * as cors from "cors";
+import Stripe from "stripe";
 
-import {onRequest} from "firebase-functions/v2/https";
-import * as logger from "firebase-functions/logger";
+const stripe = new Stripe(
+  "sk_test_51PNu3xFjdpaeR3cxxWIMVkfBf5J70dDz4JDXPJ" +
+    "rwXWAltcHDgz7lz4CI50bxHTYsjLz0Ux9DcxuqoDKgLjv8kLEE00gcDjdxyG"
+);
 
-// Start writing functions
-// https://firebase.google.com/docs/functions/typescript
+const corsHandler = cors({origin: true});
 
-// export const helloWorld = onRequest((request, response) => {
-//   logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+export const createCheckoutSession = functions.https.onRequest((req, res) => {
+  corsHandler(req, res, async () => {
+    const amount = parseFloat(req.query.amount as string);
+
+    try {
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ["card"],
+        line_items: [
+          {
+            price_data: {
+              currency: "usd",
+              product_data: {
+                name: "Beyond Profiler",
+              },
+              unit_amount: amount * 100,
+            },
+            quantity: 1,
+          },
+        ],
+        mode: "payment",
+        success_url: `${req.headers.origin}/success`,
+        cancel_url: `${req.headers.origin}/cancel`,
+      });
+
+      return res.json({id: session.id});
+    } catch (error) {
+      console.log(error);
+      res.status(500).send(error);
+      return;
+    }
+  });
+});

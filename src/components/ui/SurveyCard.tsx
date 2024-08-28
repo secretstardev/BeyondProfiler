@@ -15,6 +15,7 @@ import { toast } from "react-toastify";
 import { BiDotsVertical, BiGroup, BiSolidGroup } from "react-icons/bi";
 import { supabaseClient } from "../../config/supabase";
 import { collection, getDocs, query } from "firebase/firestore";
+import { loadStripe } from '@stripe/stripe-js';
 
 const SurveyCard = ({
   survey,
@@ -39,6 +40,9 @@ const SurveyCard = ({
   const [originRole, setOriginRole] = useState<string>();
   const navigate = useNavigate();
   const { user } = useGetUser();
+
+
+  const stripePromise = loadStripe('pk_test_51PF4E0AV3Qpp7LpjaToXiITrbA70UNDyQzRYJJf3GJdjtqhu5kl5w8kmwOmzV7oGaOdeWWhu4UVgFelLi0WvtGAF00syaVhRHM');
 
   useEffect(() => {
     setIsLoading(true);
@@ -96,6 +100,19 @@ const SurveyCard = ({
     }
   }
 
+  const handleStart = async (amount: number) => {
+
+    const response = await fetch(`https://us-central1-beyond-profiler.cloudfunctions.net/createCheckoutSession?amount=${amount}`);
+    const { id } = await response.json();
+
+    const stripe = await stripePromise;
+    const { error } = await stripe!.redirectToCheckout({ sessionId: id });
+
+    if (error) {
+      console.error('Error redirecting to checkout:', error);
+    }
+  }
+
 
 
   return loading ? (
@@ -150,13 +167,7 @@ const SurveyCard = ({
                       ? "text-blue-600"
                       : "text-blue-600"
                       } w-[104px] h-[24px]`}
-                    onClick={() => {
-                      if (user.package == "freemium") {
-                        toast.error("Please Subscribe to the Premium Package to get access to surveys")
-                      } else {
-                        navigate(`/dashboard/question/${survey.id}`)
-                      }
-                    }}
+                    onClick={() => handleStart(survey?.price ?? 0)}
                   >
                     Start
                   </Button>

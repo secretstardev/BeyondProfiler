@@ -1,21 +1,33 @@
 module.exports = {
   root: true,
-  env: { browser: true, es2020: true },
+  env: {
+    browser: true,
+    es6: true,
+    node: true,
+  },
   extends: [
     "eslint:recommended",
+    "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
-
-    "plugin:react-hooks/recommended",
   ],
   ignorePatterns: ["dist", ".eslintrc.cjs"],
   parser: "@typescript-eslint/parser",
-  plugins: ["react-refresh"],
-  // allow unused vars in typescript
+  plugins: ["react", "@typescript-eslint"],
+  settings: {
+    react: {
+      version: "detect",
+    },
+  },
+  parserOptions: {
+    ecmaFeatures: {
+      jsx: true,
+    },
+    ecmaVersion: 2020,
+    sourceType: "module",
+  },
   rules: {
-    "react-refresh/only-export-components": [
-      "warn",
-      { allowConstantExport: true },
-    ],
-    "no-unused-vars": "off",
+    quotes: ["error", "single"],
+    "eol-last": ["error", "always"],
+    "no-multiple-empty-lines": ["error", { max: 1, maxEOF: 0 }],
   },
 };
