@@ -29,8 +29,10 @@ export const createCheckoutSession = functions.https.onRequest((req, res) => {
           },
         ],
         mode: "payment",
-        success_url: `${req.headers.origin}/success`,
-        cancel_url: `${req.headers.origin}/cancel`,
+        success_url: `${req.headers.origin}/dashboard/survey/${
+          req.query.id as string
+        }`,
+        cancel_url: `${req.headers.origin}/dashbard/user`,
       });
 
       return res.json({id: session.id});

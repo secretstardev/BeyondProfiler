@@ -42,7 +42,7 @@ const SurveyCard = ({
   const { user } = useGetUser();
 
 
-  const stripePromise = loadStripe('pk_test_51PF4E0AV3Qpp7LpjaToXiITrbA70UNDyQzRYJJf3GJdjtqhu5kl5w8kmwOmzV7oGaOdeWWhu4UVgFelLi0WvtGAF00syaVhRHM');
+  const stripePromise = loadStripe('pk_test_51PNu3xFjdpaeR3cxox8drw7OE9vJKaxaN5Y3BXdnjUcNvyCPaHt37ZrtPOePGD2Xiprh7MpTUUkzMXLUDoeVIR4e00ruMjPr4w');
 
   useEffect(() => {
     setIsLoading(true);
@@ -102,7 +102,9 @@ const SurveyCard = ({
 
   const handleStart = async (amount: number) => {
 
-    const response = await fetch(`https://us-central1-beyond-profiler.cloudfunctions.net/createCheckoutSession?amount=${amount}`);
+    const response = await fetch(`https://us-central1-beyond-profiler.cloudfunctions.net/createCheckoutSession?amount=${amount}&id=${survey!.id}`, {
+      method: "post",
+    });
     const { id } = await response.json();
 
     const stripe = await stripePromise;
