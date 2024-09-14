@@ -26,7 +26,6 @@ import { BiDotsVertical } from "react-icons/bi";
 import { Database } from "../../Types/supabase";
 import ClipLoader from "react-spinners/ClipLoader";
 import Input from "../../components/ui/Input";
-import Datepicker from "tailwind-datepicker-react"
 import DatePicker from "tailwind-datepicker-react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCoffee, faCalendar } from '@fortawesome/free-solid-svg-icons'
@@ -116,13 +115,16 @@ const SurveyDetail = () => {
   };
 
   const handleDateChange = (date: Date) => {
+    console.log(date);
     const dateObject = new Date(date);
-    const year = dateObject.getUTCFullYear();
-    const month = String(dateObject.getUTCMonth() + 1).padStart(2, '0'); // Months are 0-indexed, so plus 1 is needed. Pad with 0 to always be 2 digits
-    const day = String(dateObject.getUTCDate()).padStart(2, '0'); // Pad with 0 to always be 2 digits
-    setSelectedDate(`${year}-${month}-${day}`);
-    setBirthday(`${year}-${month}-${day}`);
-  }
+    const year = dateObject.getFullYear(); // Using local date methods
+    const month = String(dateObject.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed, adjust by adding 1
+    const day = String(dateObject.getDate()).padStart(2, '0'); // Pad with 0 to always be 2 digits
+
+    const formattedDate = `${year}-${month}-${day}`;
+    setSelectedDate(formattedDate);
+    setBirthday(formattedDate);
+  };
   const handleDateClose = (state: boolean) => {
     setDateShow(state)
   }
