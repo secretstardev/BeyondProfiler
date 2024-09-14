@@ -83,7 +83,12 @@ export const createSurvey = async (
     title: newSurveyData.title,
     description: newSurveyData.description,
     role: newSurveyData.role,
-    price: newSurveyData.price
+    price: newSurveyData.price,
+    guide: newSurveyData.guide,
+    result25: newSurveyData.result25,
+    result50: newSurveyData.result50,
+    result75: newSurveyData.result75,
+    result100: newSurveyData.result100,
   });
   if (!error) {
     toast.success("Survey created successfully");
@@ -105,6 +110,11 @@ export const updateSurvey = async (
       title: updatedData.title,
       description: updatedData.description,
       role: updatedData.role,
+      guide: updatedData.guide,
+      result25: updatedData.result25,
+      result50: updatedData.result50,
+      result75: updatedData.result75,
+      result100: updatedData.result100,
     })
     .eq("id", surveyId);
   if (!error) {

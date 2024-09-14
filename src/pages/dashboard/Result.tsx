@@ -136,6 +136,7 @@ const Result = () => {
           elementId="recommendations"
           graphElementId="graphElement"
           chartElementId="ChartElement"
+          survey={survey}
           result={survey?.description || ''}
           resultInfo={results.filter((item: any) => item.resultId == resultId)[0]}
           emailId={user?.email || ""}

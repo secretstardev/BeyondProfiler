@@ -12,20 +12,29 @@ interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   setRender: any;
 }
 
-const EditSurvey: React.FC<Props> = ({ handleClose, survey,setRender }) => {
+const EditSurvey: React.FC<Props> = ({ handleClose, survey, setRender }) => {
   const [title, setTitle] = useState<Database["public"]["Tables"]["surveys"]["Row"]["title"]>(survey?.title);
   // const [tagline, setTagline] = useState<any>(survey?.tagline);
   const [description, setDescription] = useState<Database["public"]["Tables"]["surveys"]["Row"]["description"]>(survey?.description);
-  const [role,setRole]=useState<Database["public"]["Tables"]["surveys"]["Row"]["role"]>(survey?.role)
+  const [role, setRole] = useState<Database["public"]["Tables"]["surveys"]["Row"]["role"]>(survey?.role)
+  const [guide, setGuide] = useState<Database["public"]["Tables"]["surveys"]["Row"]["role"]>(survey?.guide)
+  const [result25, setResult25] = useState<Database["public"]["Tables"]["surveys"]["Row"]["role"]>(survey?.result25)
+  const [result50, setResult50] = useState<Database["public"]["Tables"]["surveys"]["Row"]["role"]>(survey?.result50)
+  const [result75, setResult75] = useState<Database["public"]["Tables"]["surveys"]["Row"]["role"]>(survey?.result75)
+  const [result100, setResult100] = useState<Database["public"]["Tables"]["surveys"]["Row"]["role"]>(survey?.result100)
 
   const handelClick = () => {
     const data = {
       title,
-      // tagline,
       description,
-      role
+      role,
+      guide,
+      result25,
+      result50,
+      result75,
+      result100
     };
-    updateSurvey(survey?.id, data,setRender)
+    updateSurvey(survey?.id, data, setRender)
     handleClose();
   };
 
@@ -64,6 +73,54 @@ const EditSurvey: React.FC<Props> = ({ handleClose, survey,setRender }) => {
         placeholder="Enter description"
         value={description || ''}
         onChange={(e) => setDescription(e.target.value)}
+      />
+
+      {/* MARK:guid */}
+      <h6 className="text-lg font-semibold mb-3">Guide</h6>
+      <textarea
+        className={
+          "h-12 w-full mt-1 mb-7 block px-3 py-2 border border-neutral-300 rounded-md text-sm placeholder-lightgray bg-white focus:outline-none focus:border-neutral-300 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"
+        }
+        placeholder="Enter guide"
+        value={guide || ''}
+        onChange={(e) => setGuide(e.target.value)}
+      />
+      {/* MARK:result */}
+      <h6 className="text-lg font-semibold mb-3">Recommendation for 0%-25%</h6>
+      <textarea
+        className={
+          "h-12 w-full mt-1 mb-7 block px-3 py-2 border border-neutral-300 rounded-md text-sm placeholder-lightgray bg-white focus:outline-none focus:border-neutral-300 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"
+        }
+        placeholder="Enter recommendation for 0%-25%"
+        value={result25 || ''}
+        onChange={(e) => setResult25(e.target.value)}
+      />
+      <h6 className="text-lg font-semibold mb-3">Recommendation for 25%-50%</h6>
+      <textarea
+        className={
+          "h-12 w-full mt-1 mb-7 block px-3 py-2 border border-neutral-300 rounded-md text-sm placeholder-lightgray bg-white focus:outline-none focus:border-neutral-300 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"
+        }
+        placeholder="Enter recommendation for 25%-50%"
+        value={result50 || ''}
+        onChange={(e) => setResult50(e.target.value)}
+      />
+      <h6 className="text-lg font-semibold mb-3">Recommendation for 50%-75%</h6>
+      <textarea
+        className={
+          "h-12 w-full mt-1 mb-7 block px-3 py-2 border border-neutral-300 rounded-md text-sm placeholder-lightgray bg-white focus:outline-none focus:border-neutral-300 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"
+        }
+        placeholder="Enter recommendation for 50%-75%"
+        value={result75 || ''}
+        onChange={(e) => setResult75(e.target.value)}
+      />
+      <h6 className="text-lg font-semibold mb-3">Recommendation for 75%-100%</h6>
+      <textarea
+        className={
+          "h-12 w-full mt-1 mb-7 block px-3 py-2 border border-neutral-300 rounded-md text-sm placeholder-lightgray bg-white focus:outline-none focus:border-neutral-300 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none"
+        }
+        placeholder="Enter recommendation for 75%-100%"
+        value={result100 || ''}
+        onChange={(e) => setResult100(e.target.value)}
       />
       <div className="flex justify-end">
         <Button className="text-md h-10" onClick={handelClick}>

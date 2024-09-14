@@ -17,6 +17,12 @@ export interface Survey {
   tagline: string;
   description: string;
   role: string;
+  price: number;
+  guide: string;
+  result25: string;
+  result50: string;
+  result75: string;
+  result100: string;
   status: string;
 }
 

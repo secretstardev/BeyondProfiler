@@ -197,34 +197,42 @@ export default function PDFTemplate(props: any) {
             <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
               <View style={{ width: "23%", padding: "4px", backgroundColor: "white", border: " 1px solid #97D1A5" }}>
                 <Text style={{ fontSize: 10, fontWeight: "extrabold", textAlign: 'left' }}>
-                  <Text style={{ textDecoration: "underline" }}>24 and below</Text>  : Independent/Typically Independent
+                  <Text style={{ textDecoration: "underline" }}>24 and below</Text> :
                 </Text>
                 <Text style={{ fontSize: 8, marginTop: "4px", textAlign: 'left' }}>
-                  Your child is generally capable of performing certain tasks or activities on their own without requiring constant assistance.
+                  {props.survey?.result25.split("\n").map((item: any) => {
+                    return <>{item} <br /></>
+                  })}
                 </Text>
               </View>
               <View style={{ width: "23%", padding: "4px", backgroundColor: "white", border: " 1px solid #97D1A5" }}>
                 <Text style={{ fontSize: 10, fontWeight: "extrabold", textAlign: 'left' }}>
-                  <Text style={{ textDecoration: "underline" }}>Between 25 and 50</Text> : Achieving Independence
+                  <Text style={{ textDecoration: "underline" }}>Between 25 and 50</Text> :
                 </Text>
                 <Text style={{ fontSize: 8, marginTop: "4px", textAlign: 'left' }}>
-                  Your child is mostly capable of performing certain tasks or activities on their own and only requires minimal adult assistance.
+                  {props.survey?.result50.split("\n").map((item: any) => {
+                    return <>{item} <br /></>
+                  })}
                 </Text>
               </View>
               <View style={{ width: "23%", padding: "4px", backgroundColor: "white", border: " 1px solid #97D1A5" }}>
                 <Text style={{ fontSize: 10, fontWeight: "extrabold", textAlign: 'left' }}>
-                  <Text style={{ textDecoration: "underline" }}>Between 51 and 75</Text> : Semi-Independent
+                  <Text style={{ textDecoration: "underline" }}>Between 51 and 75</Text> :
                 </Text>
                 <Text style={{ fontSize: 8, marginTop: "4px", textAlign: 'left' }}>
-                  Your child can perform certain tasks or activities with some degree of independence but still needs guidance and instruction from an adult.
+                  {props.survey?.result75.split("\n").map((item: any) => {
+                    return <>{item} <br /></>
+                  })}
                 </Text>
               </View>
               <View style={{ width: "23%", padding: "4px", backgroundColor: "white", border: " 1px solid #97D1A5" }}>
                 <Text style={{ fontSize: 10, fontWeight: "extrabold", textAlign: 'left' }}>
-                  <Text style={{ textDecoration: "underline" }}>Between 76 and above</Text> : Not Yet Independent/Typically Dependent
+                  <Text style={{ textDecoration: "underline" }}>Between 76 and above</Text> :
                 </Text>
                 <Text style={{ fontSize: 8, marginTop: "4px", textAlign: 'left' }}>
-                  Your child is not yet able to perform certain tasks or activities on their own and relies heavily on adult assistance.
+                  {props.survey?.result100.split("\n").map((item: any) => {
+                    return <>{item} <br /></>
+                  })}
                 </Text>
               </View>
             </View>

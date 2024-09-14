@@ -89,31 +89,12 @@ const SurveyDetail = () => {
   }, [currentUrl, survey?.id, render]);
 
   useEffect(() => {
-  }, [sections])
+    console.log("survey:\n", survey);
+  }, [survey])
 
 
   useEffect(() => {
-    const fetchData = async () => {
-      // try {
-      //   const db = getFirestore();
-      //   const surveyDocRef = doc(collection(db, "surveys"), survey?.id);
-      //   const sectionDocRef = doc(surveyDocRef, "sections", sectionId);
-      //   const recommendationsCollectionRef = collection(
-      //     sectionDocRef,
-      //     "recommendations"
-      //   );
-      //   const querySnapshot = await getDocs(recommendationsCollectionRef);
-      //   const recommendationsData = querySnapshot.docs.map((doc) => {
-      //     return { id: doc.id, ...doc.data() } as Recommendation;
-      //   });
-      //   setRecommendations(recommendationsData[0]);
-      // } catch (error: any) {
-      //   console.error("Error fetching data:", error);
-      //   setRecommendations(null);
-      // }
-    };
 
-    fetchData();
   }, [survey?.id, sectionId, section]);
 
   // console.log("sections", sections);
@@ -245,7 +226,9 @@ const SurveyDetail = () => {
                 :
                 <></>
             }
-            <div className="flex justify-between items-center mt-10">
+            <p className=" mt-10 text-[20px]">Note:</p>
+            <p className=" mt-3 text-[16px]">{survey?.guide}</p>
+            <div className="flex justify-between items-center mt-3">
               <h2 className="text-2xl text-primary font-normal">
                 {role == "admin"
                   ? "All Sections"

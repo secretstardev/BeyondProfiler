@@ -116,11 +116,16 @@ export interface Database {
       };
       surveys: {
         Row: {
-          price?: number;
+          price: number | 0;
           description: string | null;
           id: string;
           role: string | null;
           title: string | null;
+          guide: string | null;
+          result25: string | null;
+          result50: string | null;
+          result75: string | null;
+          result100: string | null;
         };
         Insert: {
           price?: number;
@@ -128,6 +133,11 @@ export interface Database {
           id?: string;
           role?: string | null;
           title?: string | null;
+          guide?: string | null;
+          result25?: string | null;
+          result50?: string | null;
+          result75?: string | null;
+          result100?: string | null;
         };
         Update: {
           price?: number;
@@ -135,6 +145,11 @@ export interface Database {
           id?: string;
           role?: string | null;
           title?: string | null;
+          guide?: string | null;
+          result25?: string | null;
+          result50?: string | null;
+          result75?: string | null;
+          result100?: string | null;
         };
         Relationships: [];
       };
