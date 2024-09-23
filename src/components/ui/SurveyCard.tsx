@@ -127,7 +127,7 @@ const SurveyCard = ({
           <div className="relative h-full w-full z-20 flex-col flex justify-between items-start p-5 ">
             <div>
               <Link
-                to={`/dashboard/survey/${survey.id}`}
+                to={``}
                 className="text-2xl font-normal cursor-pointer uppercase line-clamp-2 min-h-[64px]"
               >
                 {survey?.title}
@@ -148,32 +148,35 @@ const SurveyCard = ({
                   {numberOfQuestions} questions
                 </p>
               )}
-
             </div>
             <div className="flex flex-row w-full justify-between mb-3">
-              <div className=" justify-end ">
-                {completedSurveys && completedSurveys.includes(survey?.id) ? (
-                  <Button
-                    className={`bg-white text-sm font-normal  p-4 whitespace-nowrap ${results?.length == numberOfQuestions
-                      ? "text-blue-600"
-                      : "text-blue-600"
-                      } w-[104px] h-[24px]`}
-                    // onClick={() => navigate(`/dashboard/result/${survey.id}`)}
-                    onClick={() => navigate(`/dashboard/results/${survey.id}`)}
-                  >
-                    Results
-                  </Button>
-                ) : (
-                  <Button
-                    className={`bg-white text-sm p-4 whitespace-nowrap font-regular ${results?.length == numberOfQuestions
-                      ? "text-blue-600"
-                      : "text-blue-600"
-                      } w-[104px] h-[24px]`}
-                    onClick={() => handleStart(survey?.price ?? 0)}
-                  >
-                    Start
-                  </Button>
-                )}
+              <div className=" flex flex-row justify-start gap-x-3">
+                <Button
+                  className={`bg-white text-sm px-2 py-4 whitespace-nowrap font-regular ${results?.length == numberOfQuestions
+                    ? "text-blue-600"
+                    : "text-blue-600"
+                    } w-[84px] h-[24px]`}
+                  onClick={() => handleStart(survey?.price ?? 0)}
+                >
+                  Start
+                </Button>
+                <div className=" justify-end ">
+
+                  {completedSurveys && completedSurveys.includes(survey?.id) ? (
+                    <Button
+                      className={`bg-white text-sm font-regular  px-2 py-4 whitespace-nowrap ${results?.length == numberOfQuestions
+                        ? "text-blue-600"
+                        : "text-blue-600"
+                        } w-[84px] h-[24px]`}
+                      // onClick={() => navigate(`/dashboard/result/${survey.id}`)}
+                      onClick={() => navigate(`/dashboard/results/${survey.id}`)}
+                    >
+                      Results
+                    </Button>
+                  ) : (
+                    <></>
+                  )}
+                </div>
               </div>
               <div>
                 <p className=" text-[20px]">${survey?.price}</p>
@@ -286,6 +289,7 @@ const SurveyCard = ({
               handleClose={() => setIsDeleteOpen(false)}
             />
           </Modal>
+          {/* /dashboard/survey/${survey.id} */}
         </div>
       )}
     </>
