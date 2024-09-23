@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc && vite build",
+    "build:product": "react-scripts build",
     "preview": "vite preview",
     "update-types": "npx supabase gen types typescript --project-id \"miufdqzfqrbtwsnuvbkt\" > src/Types/supabase.ts"
   },

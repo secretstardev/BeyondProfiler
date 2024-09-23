@@ -42,7 +42,7 @@ const SurveyCard = ({
   const { user } = useGetUser();
 
 
-  const stripePromise = loadStripe('pk_test_51PNu3xFjdpaeR3cxox8drw7OE9vJKaxaN5Y3BXdnjUcNvyCPaHt37ZrtPOePGD2Xiprh7MpTUUkzMXLUDoeVIR4e00ruMjPr4w');
+  const stripePromise = loadStripe('pk_live_51PNu3xFjdpaeR3cxBgyK8DiajFoJJUocPFaRvs9ifH4NTM1JvGp88cwUFlUczvAa7xtzAoh6HdE8tzrqCwxIExUa004NQ41NNu');
 
   useEffect(() => {
     setIsLoading(true);
