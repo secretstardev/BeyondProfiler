@@ -115,6 +115,7 @@ export const updateSurvey = async (
       result50: updatedData.result50,
       result75: updatedData.result75,
       result100: updatedData.result100,
+      price: updatedData.price,
     })
     .eq("id", surveyId);
   if (!error) {

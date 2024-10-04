@@ -238,7 +238,7 @@ const SurveyCard = ({
                 </p>
               )}
             </div>
-            <div className="w-full flex justify-between mb-3">
+            <div className="w-full flex justify-between mb-3 items-center">
               <div className="flex">
                 <Button
                   className={`bg-white p-4 md:p-4 text-sm font-normal text-blue-600 w-[60px] h-[24px] whitespace-nowrap`}
@@ -257,18 +257,21 @@ const SurveyCard = ({
                   Delete
                 </Button>
               </div>
-              <button
-                onClick={() => {
-                  handleShare(!isDropDownOpen);
-                  setIsDropDownOpen(!isDropDownOpen);
-                }}
-                className="relative z-10 block p-2 text-gray-700  border border-transparent rounded-md focus:outline-none hover:bg-slate-100 hover:bg-transparent hover:text-gray-100"
-              >
-                {
-                  !isDropDownOpen ? <BiGroup /> : <BiSolidGroup />
-                }
+              <div className=" flex flex-row items-center gap-3">
+                <p>${survey.price}</p>
+                <button
+                  onClick={() => {
+                    handleShare(!isDropDownOpen);
+                    setIsDropDownOpen(!isDropDownOpen);
+                  }}
+                  className="relative z-10 block p-2 text-gray-700  border border-transparent rounded-md focus:outline-none hover:bg-slate-100 hover:bg-transparent hover:text-gray-100"
+                >
+                  {
+                    !isDropDownOpen ? <BiGroup /> : <BiSolidGroup />
+                  }
 
-              </button>
+                </button>
+              </div>
 
             </div>
           </div>

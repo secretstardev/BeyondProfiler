@@ -22,6 +22,7 @@ const EditSurvey: React.FC<Props> = ({ handleClose, survey, setRender }) => {
   const [result50, setResult50] = useState<Database["public"]["Tables"]["surveys"]["Row"]["role"]>(survey?.result50)
   const [result75, setResult75] = useState<Database["public"]["Tables"]["surveys"]["Row"]["role"]>(survey?.result75)
   const [result100, setResult100] = useState<Database["public"]["Tables"]["surveys"]["Row"]["role"]>(survey?.result100)
+  const [price, setPrice] = useState<any>(survey?.price)
 
   const handelClick = () => {
     const data = {
@@ -32,7 +33,8 @@ const EditSurvey: React.FC<Props> = ({ handleClose, survey, setRender }) => {
       result25,
       result50,
       result75,
-      result100
+      result100,
+      price
     };
     updateSurvey(survey?.id, data, setRender)
     handleClose();
@@ -74,8 +76,16 @@ const EditSurvey: React.FC<Props> = ({ handleClose, survey, setRender }) => {
         value={description || ''}
         onChange={(e) => setDescription(e.target.value)}
       />
-
-      {/* MARK:guid */}
+      {/* MARK:price */}
+      <h6 className="text-lg font-semibold mb-3">Price(USD)</h6>
+      <Input
+        placeholder="Enter price"
+        type="number"
+        value={price}
+        onChange={(e) => setPrice(Number(e.target.value))}
+        className="mb-7"
+      />
+      {/* MARK:guide */}
       <h6 className="text-lg font-semibold mb-3">Guide</h6>
       <textarea
         className={
