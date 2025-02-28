@@ -5,6 +5,8 @@ import { IoEye, IoEyeOff } from "react-icons/io5";
 import { handleSignUp } from "../../../helpers/auth";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import childLogo from "../../../../public/assets/images/my_genius_logo.png";
+import employeeLogo from "../../../../public/assets/images/beyond_profiler_logo.png";
 
 const SignupForm = () => {
   const [child, setChild] = useState(false);
@@ -92,12 +94,12 @@ const SignupForm = () => {
             }}
           >
             <img
-              src="/assets/images/child.svg"
-              width={30}
-              height={64}
+              src={childLogo}
+              width={60}
+              height={128}
               alt="background"
             />
-            <p className="text-base mt-1">Child</p>
+            {/* <p className="text-base mt-1">Child</p> */}
           </div>
           <div
             className={
@@ -112,12 +114,12 @@ const SignupForm = () => {
             }}
           >
             <img
-              src="/assets/images/employee.svg"
-              width={33}
-              height={67}
+              src={employeeLogo}
+              width={66}
+              height={134}
               alt="background"
             />
-            <p className="text-base mt-1">Employee</p>
+            {/* <p className="text-base mt-1">Employee</p> */}
           </div>
         </div>
       </div>

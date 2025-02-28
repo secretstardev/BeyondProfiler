@@ -1,6 +1,6 @@
 
 import LoginForm from "../components/ui/forms/LoginForm";
-import logo from "../../public/assets/images/beyond_logo.png"
+import logo from "../../public/assets/images/dual_logo.png"
 import mainImage from "../../public/assets/images/login_image.jpeg"
 
 const Login = () => {
@@ -10,10 +10,12 @@ const Login = () => {
         <div className="lg:w-1/2 w-full flex justify-center items-center">
           <div className="lg:flex items-center justify-start h-full">
             <div className="w-full lg:max-w-md">
-              <img
-                src={logo}
-                alt="logo"
-              />
+              <div className=" w-full flex flex-row justify-center">
+                <img
+                  src={logo}
+                  alt="logo"
+                />
+              </div>
               <h5 className="text-[26px] font-semibold mb-3 mt-10">
                 Login To Your Account
               </h5>

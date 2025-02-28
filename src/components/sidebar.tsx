@@ -43,12 +43,12 @@ const Sidebar: React.FC<Props> = ({ children }) => {
     <div className={twMerge(`flex h-screen`)}>
       <div className="hidden md:flex bg-[#33186B] h-screen w-[294px]">
         <div className="flex flex-col justify-start center px-8 gap-2 w-full">
-          <div className="my-16 w-full">
-            <img
+          <div className="my-10 w-full">
+            {/* <img
               src={sidebarlogo}
               alt="logo"
               className=""
-            />
+            /> */}
           </div>
 
           {routes?.map((route, index) => {

@@ -7,10 +7,10 @@ const Signup = () => {
     <div className="flex justify-center items-center w-full min-h-[100vh]">
       <div className="lg:w-1/2 flex  justify-center items-start p-20">
         <div className="w-[70%]">
-          <img
+          {/* <img
             src={logo}
             alt="logo"
-          />
+          /> */}
           <h5 className="text-[24px] font-semibold mb-3 mt-5">
             Create Your Account
           </h5>

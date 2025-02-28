@@ -10,12 +10,14 @@ interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   setFilter: (args: string) => void;
 }
 const Dropdown: React.FC<Props> = ({ setFilter }) => {
-  const [selected, setSelected] = useState("child");
+  const [selected, setSelected] = useState("My Genius");
 
-  const options = ["child", "employee"];
+  const options = ["My Genius", "Beyond"];
 
   useEffect(() => {
-    setFilter(selected);
+    if(selected == "My Genius") setFilter("child");
+    if(selected == "Beyond") setFilter("employee")
+    // setFilter(selected);
   }, [selected]);
 
   return (

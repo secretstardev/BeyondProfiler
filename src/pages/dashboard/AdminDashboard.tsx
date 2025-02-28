@@ -35,6 +35,11 @@ const AdminDashboard = () => {
     fetchData();
   }, [filter, render]);
 
+  useEffect(() => {
+    console.log(surveys);
+  }, [surveys])
+
+
   return (
     <div>
       <Header heading="Dashboard" />
@@ -52,6 +57,7 @@ const AdminDashboard = () => {
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
         {surveys?.map((survey, index) => {
+          if (survey.id == "40ccbe16-736f-4a2d-8b2f-6234b1dfebf1") return;
           return (
             <div key={index}>
               <SurveyCard survey={survey} setRender={setRender} filter={filter} />
